@@ -1,4 +1,3 @@
-Here is a professional and detailed `README.md` content for your GitHub repository, including the preview image you provided:
 
 ***
 
