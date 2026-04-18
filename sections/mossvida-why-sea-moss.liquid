@@ -1,0 +1,286 @@
+{% comment %}
+  MossVida — Why Sea Moss Section
+  Enhanced with full typography, spacing, and mobile-specific controls.
+{% endcomment %}
+
+<style>
+.mv-why-section-{{ section.id }} * { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mv-why-section-{{ section.id }} {
+  --mv-primary: {{ section.settings.primary_color }};
+  --mv-primary-glow: {{ section.settings.primary_glow_color }};
+  --mv-ocean-deep: {{ section.settings.ocean_deep_color }};
+  --mv-background: {{ section.settings.background_color }};
+  --mv-foreground: {{ section.settings.foreground_color }};
+  --mv-muted-foreground: {{ section.settings.muted_color }};
+  
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  background: linear-gradient(180deg, {{ section.settings.bg_top }}, {{ section.settings.bg_bottom }});
+  font-family: system-ui, -apple-system, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.mv-why-wave-{{ section.id }} {
+  position: absolute;
+  top: 2.5rem;
+  right: 2.5rem;
+  width: {{ section.settings.wave_size }}px;
+  height: {{ section.settings.wave_size }}px;
+  color: var(--mv-primary);
+  opacity: {{ section.settings.wave_opacity }};
+}
+.mv-why-wave-{{ section.id }} svg { width: 100%; height: 100%; }
+
+.mv-why-container-{{ section.id }} {
+  max-width: {{ section.settings.container_width }}px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: {{ section.settings.grid_gap }}px;
+  align-items: center;
+  position: relative;
+}
+
+.mv-why-kicker {
+  font-size: {{ section.settings.kicker_size }}px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--mv-primary);
+  margin-bottom: 1rem;
+}
+
+.mv-why-h2 {
+  font-size: {{ section.settings.heading_size }}px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--mv-ocean-deep);
+  letter-spacing: -0.02em;
+  margin-bottom: {{ section.settings.heading_margin_bottom }}px;
+}
+
+.mv-why-desc {
+  font-size: {{ section.settings.desc_size }}px;
+  line-height: 1.75;
+  color: var(--mv-muted-foreground);
+  margin-bottom: {{ section.settings.desc_margin_bottom }}px;
+}
+
+.mv-why-list {
+  display: flex;
+  flex-direction: column;
+  gap: {{ section.settings.list_gap }}px;
+}
+
+.mv-why-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.mv-why-check {
+  width: {{ section.settings.check_size }}px;
+  height: {{ section.settings.check_size }}px;
+  border-radius: 9999px;
+  background: linear-gradient(135deg, var(--mv-primary), var(--mv-primary-glow));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.mv-why-check svg {
+  width: 60%;
+  height: 60%;
+  color: #ffffff;
+  stroke-width: 3;
+}
+
+.mv-why-text {
+  font-size: {{ section.settings.list_text_size }}px;
+  color: var(--mv-foreground);
+  line-height: 1.5;
+}
+
+.mv-why-image-{{ section.id }} {
+  aspect-ratio: {{ section.settings.image_aspect_ratio }};
+  border-radius: {{ section.settings.image_radius }}px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px -20px rgba(0,0,0,0.35);
+}
+
+.mv-why-image-{{ section.id }} img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (max-width: 1024px) {
+  .mv-why-container-{{ section.id }} { 
+    grid-template-columns: 1fr; 
+    gap: {{ section.settings.grid_gap_mobile }}px; 
+    text-align: {{ section.settings.mobile_alignment }};
+  }
+  .mv-why-item { justify-content: {% if section.settings.mobile_alignment == 'center' %}center{% else %}flex-start{% endif %}; }
+  
+  .mv-why-h2 { font-size: {{ section.settings.heading_size_mobile }}px; }
+  .mv-why-desc { font-size: {{ section.settings.desc_size_mobile }}px; }
+  
+  {% if section.settings.reverse_mobile %}
+    .mv-why-content { order: 2; }
+    .mv-why-image-{{ section.id }} { order: 1; }
+  {% endif %}
+}
+
+@media (max-width: 768px) {
+  .mv-why-section-{{ section.id }} { 
+    padding-top: {{ section.settings.padding_top_mobile }}px; 
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px; 
+  }
+  .mv-why-container-{{ section.id }} { padding: 0 1.5rem; }
+}
+</style>
+
+<section class="mv-why-section-{{ section.id }}" aria-label="{{ section.settings.aria_label }}">
+  {%- if section.settings.show_wave_icon -%}
+    <div class="mv-why-wave-{{ section.id }}" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+      </svg>
+    </div>
+  {%- endif -%}
+
+  <div class="mv-why-container-{{ section.id }}">
+    <div class="mv-why-content">
+      {%- if section.settings.kicker != blank -%}
+        <p class="mv-why-kicker">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      <h2 class="mv-why-h2">{{ section.settings.heading }}</h2>
+      {%- if section.settings.description != blank -%}
+        <p class="mv-why-desc">{{ section.settings.description }}</p>
+      {%- endif -%}
+
+      <div class="mv-why-list">
+        {%- for i in (1..4) -%}
+          {%- assign item_key = 'list_item_' | append: i -%}
+          {%- assign item = section.settings[item_key] -%}
+          {%- if item != blank -%}
+            <div class="mv-why-item">
+              <div class="mv-why-check" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <span class="mv-why-text">{{ item }}</span>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.settings.image != blank -%}
+      <div class="mv-why-image-{{ section.id }}">
+        {{ section.settings.image | image_url: width: 1200 | image_tag: alt: section.settings.image_alt, loading: 'lazy' }}
+      </div>
+    {%- else -%}
+        <div class="mv-why-image-{{ section.id }}" style="background: #e5e7eb; display:flex; align-items:center; justify-content:center; color:#9ca3af;">
+            <span>Image Placeholder</span>
+        </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "MossVida — Why Sea Moss",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Layout"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container Max Width",
+      "min": 1000,
+      "max": 1600,
+      "step": 10,
+      "unit": "px",
+      "default": 1280
+    },
+    { "type": "range", "id": "padding_top", "label": "Top Padding (Desktop)", "min": 0, "max": 150, "step": 5, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom Padding (Desktop)", "min": 0, "max": 150, "step": 5, "unit": "px", "default": 100 },
+    { "type": "range", "id": "grid_gap", "label": "Grid Gap (Desktop)", "min": 20, "max": 120, "step": 5, "unit": "px", "default": 60 },
+    {
+      "type": "header",
+      "content": "Mobile Layout"
+    },
+    { "type": "range", "id": "padding_top_mobile", "label": "Top Padding (Mobile)", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Bottom Padding (Mobile)", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 60 },
+    { "type": "range", "id": "grid_gap_mobile", "label": "Grid Gap (Mobile)", "min": 10, "max": 80, "step": 5, "unit": "px", "default": 40 },
+    { "type": "select", "id": "mobile_alignment", "label": "Mobile Text Alignment", "options": [ { "value": "left", "label": "Left" }, { "value": "center", "label": "Center" } ], "default": "left" },
+    { "type": "checkbox", "id": "reverse_mobile", "label": "Image on Top (Mobile)", "default": false },
+    {
+      "type": "header",
+      "content": "Typography - Kicker & Heading"
+    },
+    { "type": "text", "id": "kicker", "label": "Kicker text", "default": "The science" },
+    { "type": "range", "id": "kicker_size", "label": "Kicker Font Size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 14 },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Nature's multivitamin, harvested from the sea." },
+    { "type": "range", "id": "heading_size", "label": "Heading Size (Desktop)", "min": 24, "max": 64, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading Size (Mobile)", "min": 20, "max": 48, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "heading_margin_bottom", "label": "Heading Margin Bottom", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 24 },
+    {
+      "type": "header",
+      "content": "Typography - Description"
+    },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Wild-harvested Irish sea moss contains 92 of the 102 minerals your body needs to function." },
+    { "type": "range", "id": "desc_size", "label": "Description Size (Desktop)", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "desc_size_mobile", "label": "Description Size (Mobile)", "min": 14, "max": 20, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "desc_margin_bottom", "label": "Description Margin Bottom", "min": 0, "max": 60, "step": 2, "unit": "px", "default": 32 },
+    {
+      "type": "header",
+      "content": "Checklist Settings"
+    },
+    { "type": "range", "id": "list_gap", "label": "Gap between items", "min": 4, "max": 30, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "list_text_size", "label": "List Text Size", "min": 12, "max": 20, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "check_size", "label": "Checkmark Circle Size", "min": 16, "max": 32, "step": 2, "unit": "px", "default": 24 },
+    { "type": "textarea", "id": "list_item_1", "label": "Item 1", "default": "92 essential minerals & trace elements" },
+    { "type": "textarea", "id": "list_item_2", "label": "Item 2", "default": "Wild-harvested Irish sea moss" },
+    { "type": "textarea", "id": "list_item_3", "label": "Item 3", "default": "Synergistic bladderwrack + burdock root" },
+    { "type": "textarea", "id": "list_item_4", "label": "Item 4", "default": "Cold-processed to preserve nutrients" },
+    {
+      "type": "header",
+      "content": "Image Settings"
+    },
+    { "type": "image_picker", "id": "image", "label": "Side Image" },
+    { "type": "text", "id": "image_alt", "label": "Alt text", "default": "Sea moss ocean" },
+    { "type": "select", "id": "image_aspect_ratio", "label": "Image Aspect Ratio", "options": [ { "value": "1/1", "label": "Square" }, { "value": "4/5", "label": "Portrait" }, { "value": "16/9", "label": "Wide" } ], "default": "4/5" },
+    { "type": "range", "id": "image_radius", "label": "Image Corner Radius", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 48 },
+    {
+      "type": "header",
+      "content": "Decorative Wave"
+    },
+    { "type": "checkbox", "id": "show_wave_icon", "label": "Show wave icon", "default": true },
+    { "type": "range", "id": "wave_size", "label": "Wave Icon Size", "min": 40, "max": 200, "step": 10, "unit": "px", "default": 120 },
+    { "type": "range", "id": "wave_opacity", "label": "Wave Opacity", "min": 0, "max": 1, "step": 0.1, "default": 0.1 },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    { "type": "color", "id": "primary_color", "label": "Primary (Teal)", "default": "#1d7869" },
+    { "type": "color", "id": "primary_glow_color", "label": "Glow Color", "default": "#22c99e" },
+    { "type": "color", "id": "ocean_deep_color", "label": "Heading", "default": "#0c313d" },
+    { "type": "color", "id": "muted_color", "label": "Description", "default": "#5a7a7f" },
+    { "type": "color", "id": "foreground_color", "label": "List Text", "default": "#0c313d" },
+    { "type": "color", "id": "bg_top", "label": "Section Gradient Top", "default": "#f9f7f2" },
+    { "type": "color", "id": "bg_bottom", "label": "Section Gradient Bottom", "default": "#ede6d8" },
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Why Sea Moss" }
+  ],
+  "presets": [ { "name": "MossVida — Why Sea Moss" } ]
+}
+{% endschema %}

@@ -1,0 +1,321 @@
+{% comment %}
+  GreenBoost — FAQ
+  File: sections/gb-faq.liquid
+  Matches: .faq-section in GreenBoost_ProductDetail.html exactly
+{% endcomment %}
+
+<style>
+/* ── RESET ── */
+#gb-faq-{{ section.id }},
+#gb-faq-{{ section.id }} *,
+#gb-faq-{{ section.id }} *::before,
+#gb-faq-{{ section.id }} *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── SECTION — matches: .faq-section { background:#fff; } + section { padding:100px 64px; } ── */
+#gb-faq-{{ section.id }} {
+  background: {{ section.settings.bg_color }};
+  padding: {{ section.settings.padding_v }}px {{ section.settings.padding_h }}px;
+  font-family: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* ── INNER WRAPPER ── */
+#gb-faq-{{ section.id }} .faq-inner {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+}
+
+/* ── HEADING — matches: .faq-section h2 { font-size:clamp(28px,3.5vw,42px); font-weight:800; letter-spacing:-1.5px; margin-bottom:48px; } ── */
+#gb-faq-{{ section.id }} .faq-heading {
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: {{ section.settings.heading_color }};
+  line-height: 1.1;
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+/* ── LIST — matches: .faq-list { max-width:760px; } ── */
+#gb-faq-{{ section.id }} .faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+/* ── ITEM — matches: .faq-item { border-top:1px solid var(--light); } ── */
+#gb-faq-{{ section.id }} .faq-item {
+  border-top: 1px solid {{ section.settings.border_color }};
+}
+
+/* matches: .faq-item:last-child { border-bottom:1px solid var(--light); } */
+#gb-faq-{{ section.id }} .faq-item:last-child {
+  border-bottom: 1px solid {{ section.settings.border_color }};
+}
+
+/* ── TRIGGER — matches: .faq-trigger { width:100%; display:flex; justify-content:space-between; align-items:center; padding:20px 0; background:none; border:none; cursor:pointer; font-size:16px; font-weight:700; color:#111; font-family:'Plus Jakarta Sans',sans-serif; text-align:left; gap:20px; } ── */
+#gb-faq-{{ section.id }} .faq-trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+  color: {{ section.settings.question_color }};
+  font-family: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+  text-align: left;
+  gap: 20px;
+}
+
+/* ── ICON — matches: .faq-icon { font-size:22px; font-weight:300; color:var(--mid); transition:transform .3s; flex-shrink:0; } ── */
+#gb-faq-{{ section.id }} .faq-icon {
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+  color: {{ section.settings.icon_color }};
+  transition: transform 0.3s;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* matches: .faq-item.open .faq-icon { transform:rotate(45deg); } ── */
+#gb-faq-{{ section.id }} .faq-item.open .faq-icon {
+  transform: rotate(45deg);
+}
+
+/* ── BODY — smooth max-height transition (enhances HTML display:none/block behaviour) ── */
+#gb-faq-{{ section.id }} .faq-body {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.35s ease;
+}
+
+#gb-faq-{{ section.id }} .faq-item.open .faq-body {
+  max-height: 800px;
+}
+
+/* matches: .faq-body p { font-size:14px; color:var(--gray); line-height:1.75; } + padding-bottom:20px from .faq-body { padding-bottom:20px; } ── */
+#gb-faq-{{ section.id }} .faq-body p {
+  font-size: 14px;
+  color: {{ section.settings.answer_color }};
+  line-height: 1.75;
+  padding-bottom: 20px;
+}
+
+/* ── RESPONSIVE — mobile ── */
+@media (max-width: 560px) {
+  #gb-faq-{{ section.id }} {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+</style>
+
+<section id="gb-faq-{{ section.id }}">
+  <div class="faq-inner">
+
+    {%- if section.settings.heading != blank -%}
+      <h2 class="faq-heading">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="faq-list">
+        {%- for block in section.blocks -%}
+          <div class="faq-item" {{ block.shopify_attributes }}>
+            <button class="faq-trigger" aria-expanded="false">
+              <span>{{ block.settings.question }}</span>
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-body">
+              {%- if block.settings.answer != blank -%}
+                <p>{{ block.settings.answer }}</p>
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+<script>
+(function () {
+  var section = document.getElementById('gb-faq-{{ section.id }}');
+  if (!section) return;
+  section.querySelectorAll('.faq-trigger').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var item = btn.closest('.faq-item');
+      var isOpen = item.classList.contains('open');
+      item.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "GB — FAQ",
+  "tag": "section",
+  "class": "gb-faq-section-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently asked questions"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Max width (px)",
+      "min": 800,
+      "max": 1900,
+      "step": 20,
+      "default": 1200
+    },
+    {
+      "type": "range",
+      "id": "padding_v",
+      "label": "Vertical padding (px)",
+      "min": 40,
+      "max": 160,
+      "step": 4,
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_h",
+      "label": "Horizontal padding (px)",
+      "min": 16,
+      "max": 120,
+      "step": 4,
+      "default": 64
+    },
+    {
+      "type": "header",
+      "content": "Colours"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading colour",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Divider line colour",
+      "default": "#e0dbd5"
+    },
+    {
+      "type": "color",
+      "id": "question_color",
+      "label": "Question text colour",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon colour",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "answer_color",
+      "label": "Answer text colour",
+      "default": "#6b6b6b"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is Green Core?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "Green Core is a premium gut health formula combining clinically-studied probiotics, digestive enzymes, and prebiotic fibre."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom— FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How long until I see results?",
+            "answer": "Most people notice digestive improvement within 7–14 days. Significant changes to gut microbiome balance typically occur over 30–60 days of consistent use. We recommend giving it a full 30 days — which is why we offer a 90-day money-back guarantee."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I take Green Core with other Green Boost products?",
+            "answer": "Absolutely. Green Core is designed to work synergistically with the rest of the Green Boost lineup. It pairs especially well with Green Vitality (GB-05) as a complete daily foundation stack. All five formulas are designed to complement each other without overlap."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Is Green Core safe to take every day?",
+            "answer": "Yes. Green Core is formulated for daily use and contains only ingredients recognized as safe (GRAS) at the doses provided. It is non-GMO, free of artificial colors, flavors, and sweeteners. Always consult your healthcare provider if you have a medical condition or take medications."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What if I want to cancel my subscription?",
+            "answer": "No problem — cancellation is completely hassle-free. Log in to your account, go to Subscriptions, and cancel anytime. You can also skip a month, change your delivery frequency, or pause — all from your account dashboard."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Does Green Core contain any allergens?",
+            "answer": "Green Core is free from gluten, soy, dairy, nuts, and shellfish. It is manufactured in a facility that processes these allergens. Full ingredient and allergen information is available in the Supplement Facts panel."
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What is your money-back guarantee?",
+            "answer": "We offer a full 90-day money-back guarantee. If you're not completely satisfied with Green Core for any reason within 90 days of purchase, contact our support team for a full refund — no questions asked. This applies to first-time purchases."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

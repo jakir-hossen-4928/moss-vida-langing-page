@@ -1,0 +1,288 @@
+{% comment %}
+  MossVida — FAQ Section
+  Collapsible accordion with full responsive controls.
+{% endcomment %}
+
+<style>
+.mv-faq-section-{{ section.id }} * { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mv-faq-section-{{ section.id }} {
+  --mv-primary: {{ section.settings.primary_color }};
+  --mv-ocean-deep: {{ section.settings.ocean_deep_color }};
+  --mv-background: {{ section.settings.background_color }};
+  --mv-foreground: {{ section.settings.foreground_color }};
+  --mv-muted-foreground: {{ section.settings.muted_color }};
+  --mv-border: {{ section.settings.border_color }};
+  --mv-card: #ffffff;
+  
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  background: linear-gradient(180deg, {{ section.settings.bg_top }}, {{ section.settings.bg_bottom }});
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.mv-faq-container-{{ section.id }} {
+  max-width: {{ section.settings.container_width }}px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.mv-faq-header {
+  text-align: {{ section.settings.header_alignment }};
+  margin-bottom: {{ section.settings.header_margin_bottom }}px;
+}
+
+.mv-faq-kicker {
+  font-size: {{ section.settings.kicker_size }}px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--mv-primary);
+  margin-bottom: 0.75rem;
+}
+
+.mv-faq-h2 {
+  font-size: {{ section.settings.heading_size }}px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--mv-ocean-deep);
+  letter-spacing: -0.02em;
+}
+
+.mv-faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: {{ section.settings.item_gap }}px;
+}
+
+.mv-faq-item {
+  background: var(--mv-card);
+  border: 1px solid var(--mv-border);
+  border-radius: {{ section.settings.card_radius }}px;
+  box-shadow: 0 4px 20px -4px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.mv-faq-item.active {
+  border-color: var(--mv-primary);
+}
+
+.mv-faq-btn {
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  font-size: {{ section.settings.question_size }}px;
+  font-weight: 600;
+  color: var(--mv-ocean-deep);
+}
+
+.mv-faq-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+  position: relative;
+  margin-left: 1rem;
+}
+
+.mv-faq-icon::before,
+.mv-faq-icon::after {
+  content: '';
+  position: absolute;
+  background: var(--mv-ocean-deep);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+}
+
+.mv-faq-icon::before {
+  width: 2px;
+  height: 100%;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+}
+
+.mv-faq-icon::after {
+  width: 100%;
+  height: 2px;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.mv-faq-item.active .mv-faq-icon::before {
+  transform: translateX(-50%) rotate(90deg);
+  opacity: 0;
+}
+
+.mv-faq-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mv-faq-answer {
+  padding: 0 1.5rem 1.5rem;
+  line-height: 1.7;
+  font-size: {{ section.settings.answer_size }}px;
+  color: var(--mv-muted-foreground);
+}
+
+@media (max-width: 768px) {
+  .mv-faq-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .mv-faq-container-{{ section.id }} { padding: 0 1.5rem; }
+  .mv-faq-header { 
+    text-align: {{ section.settings.mobile_header_alignment }};
+    margin-bottom: 2rem;
+  }
+  .mv-faq-h2 { font-size: {{ section.settings.heading_size_mobile }}px; }
+  .mv-faq-btn { font-size: {{ section.settings.question_size_mobile }}px; padding: 1rem 1.25rem; }
+  .mv-faq-answer { font-size: {{ section.settings.answer_size_mobile }}px; padding: 0 1.25rem 1.25rem; }
+}
+</style>
+
+<section class="mv-faq-section-{{ section.id }}" aria-label="{{ section.settings.aria_label }}">
+  <div class="mv-faq-container-{{ section.id }}">
+    <div class="mv-faq-header">
+      {%- if section.settings.kicker != blank -%}
+        <p class="mv-faq-kicker">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      <h2 class="mv-faq-h2">{{ section.settings.heading }}</h2>
+    </div>
+
+    <div class="mv-faq-list">
+      {%- for i in (1..6) -%}
+        {%- assign q_key = 'faq_q_' | append: i -%}
+        {%- assign a_key = 'faq_a_' | append: i -%}
+        {%- assign q = section.settings[q_key] -%}
+        {%- assign a = section.settings[a_key] -%}
+        
+        {%- if q != blank -%}
+          <div class="mv-faq-item">
+            <button class="mv-faq-btn" type="button" aria-expanded="false">
+              <span>{{ q }}</span>
+              <span class="mv-faq-icon" aria-hidden="true"></span>
+            </button>
+            <div class="mv-faq-content" role="region">
+              <div class="mv-faq-answer">{{ a }}</div>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const initFaq = () => {
+    const items = document.querySelectorAll('.mv-faq-section-{{ section.id }} .mv-faq-item');
+    items.forEach(item => {
+      const btn = item.querySelector('.mv-faq-btn');
+      const content = item.querySelector('.mv-faq-content');
+      
+      btn.onclick = () => {
+        const isActive = item.classList.contains('active');
+        
+        // Optional: Close others (Accordion mode)
+        {% if section.settings.accordion_mode %}
+        items.forEach(i => {
+          i.classList.remove('active');
+          i.querySelector('.mv-faq-content').style.maxHeight = null;
+          i.querySelector('.mv-faq-btn').setAttribute('aria-expanded', 'false');
+        });
+        {% endif %}
+
+        if (!isActive) {
+          item.classList.add('active');
+          content.style.maxHeight = content.scrollHeight + "px";
+          btn.setAttribute('aria-expanded', 'true');
+        } else {
+          item.classList.remove('active');
+          content.style.maxHeight = null;
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      };
+    });
+  };
+  document.addEventListener('DOMContentLoaded', initFaq);
+  if (window.Shopify && window.Shopify.designMode) {
+    document.addEventListener('shopify:section:load', initFaq);
+  }
+})();
+</script>
+
+{% schema %}
+{
+  "name": "MossVida — FAQ",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    { "type": "range", "id": "container_width", "label": "Max Width", "min": 600, "max": 1000, "step": 20, "unit": "px", "default": 800 },
+    { "type": "range", "id": "padding_top", "label": "Top Padding (Desktop)", "min": 0, "max": 150, "step": 5, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom Padding (Desktop)", "min": 0, "max": 150, "step": 5, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_top_mobile", "label": "Top Padding (Mobile)", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Bottom Padding (Mobile)", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 60 },
+    {
+      "type": "header",
+      "content": "Typography - Heading"
+    },
+    { "type": "select", "id": "header_alignment", "label": "Alignment (Desktop)", "options": [ {"value": "left", "label": "Left"}, {"value": "center", "label": "Center"} ], "default": "center" },
+    { "type": "select", "id": "mobile_header_alignment", "label": "Alignment (Mobile)", "options": [ {"value": "left", "label": "Left"}, {"value": "center", "label": "Center"} ], "default": "center" },
+    { "type": "text", "id": "kicker", "label": "Kicker text", "default": "Questions" },
+    { "type": "range", "id": "kicker_size", "label": "Kicker Size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 14 },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Everything you need to know." },
+    { "type": "range", "id": "heading_size", "label": "Heading Size (Desktop)", "min": 24, "max": 64, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading Size (Mobile)", "min": 20, "max": 40, "step": 2, "unit": "px", "default": 28 },
+    { "type": "range", "id": "header_margin_bottom", "label": "Header Margin Bottom", "min": 20, "max": 100, "step": 5, "unit": "px", "default": 40 },
+    {
+      "type": "header",
+      "content": "Typography - FAQ Items"
+    },
+    { "type": "range", "id": "question_size", "label": "Question Size (Desktop)", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 18 },
+    { "type": "range", "id": "question_size_mobile", "label": "Question Size (Mobile)", "min": 14, "max": 20, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "answer_size", "label": "Answer Size (Desktop)", "min": 14, "max": 20, "step": 1, "unit": "px", "default": 16 },
+    { "type": "range", "id": "answer_size_mobile", "label": "Answer Size (Mobile)", "min": 13, "max": 18, "step": 1, "unit": "px", "default": 15 },
+    {
+      "type": "header",
+      "content": "Accordion Style"
+    },
+    { "type": "checkbox", "id": "accordion_mode", "label": "Accordion Mode (Only 1 open at a time)", "default": true },
+    { "type": "range", "id": "item_gap", "label": "Gap between items", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 12 },
+    { "type": "range", "id": "card_radius", "label": "Corner Radius", "min": 0, "max": 30, "step": 2, "unit": "px", "default": 16 },
+    {
+      "type": "header",
+      "content": "FAQ Content"
+    },
+    { "type": "textarea", "id": "faq_q_1", "label": "Q1", "default": "How do I take MossVida gummies?" },
+    { "type": "textarea", "id": "faq_a_1", "label": "A1", "default": "Take 2 gummies daily. Consistency is key." },
+    { "type": "textarea", "id": "faq_q_2", "label": "Q2", "default": "Are they really vegan?" },
+    { "type": "textarea", "id": "faq_a_2", "label": "A2", "default": "Yes, 100% vegan and organic." },
+    { "type": "textarea", "id": "faq_q_3", "label": "Q3", "default": "What is the shipping time?" },
+    { "type": "textarea", "id": "faq_a_3", "label": "A3", "default": "Usually 3-5 business days." },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    { "type": "color", "id": "primary_color", "label": "Primary Accent", "default": "#1d7869" },
+    { "type": "color", "id": "ocean_deep_color", "label": "Heading & Question", "default": "#0c313d" },
+    { "type": "color", "id": "background_color", "label": "Section Background", "default": "#f9f7f2" },
+    { "type": "color", "id": "muted_color", "label": "Answer Text", "default": "#5a7a7f" },
+    { "type": "color", "id": "border_color", "label": "Border Color", "default": "#d8e9eb" },
+    { "type": "color", "id": "bg_top", "label": "Gradient Top", "default": "#f0f9fa" },
+    { "type": "color", "id": "bg_bottom", "label": "Gradient Bottom", "default": "#d8f0f2" },
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Frequently Asked Questions" }
+  ],
+  "presets": [ { "name": "MossVida — FAQ" } ]
+}
+{% endschema %}

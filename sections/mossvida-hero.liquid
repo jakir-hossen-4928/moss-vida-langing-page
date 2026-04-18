@@ -1,0 +1,532 @@
+{% comment %}
+  MossVida — Hero Section
+  Beautiful ocean-themed hero with beach background, floating bottle animation, gradient overlays, and CTAs
+{% endcomment %}
+
+<style>
+.mv-hero-section *,
+.mv-hero-section *::before,
+.mv-hero-section *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mv-hero-section {
+  --mv-primary: {{ section.settings.primary_color }};
+  --mv-primary-glow: {{ section.settings.primary_glow_color }};
+  --mv-ocean-deep: {{ section.settings.ocean_deep_color }};
+  --mv-ocean-mid: {{ section.settings.ocean_mid_color }};
+  --mv-background: {{ section.settings.background_color }};
+  --mv-foreground: {{ section.settings.foreground_color }};
+  --mv-muted-foreground: {{ section.settings.muted_color }};
+  --mv-border: {{ section.settings.border_color }};
+  --mv-card: #ffffff;
+  --mv-radius: 1rem;
+  --mv-shadow-soft: 0 4px 20px -4px rgba(0,0,0,0.08);
+  --mv-shadow-glow: 0 20px 60px -20px rgba(0,0,0,0.35);
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: 80px;
+  overflow: hidden;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.mv-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+}
+
+.mv-hero-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.55) 50%, rgba(0,0,0,0.4) 100%);
+}
+
+.mv-hero-bottom-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--mv-background), var(--mv-background) 20%, transparent 60%);
+}
+
+.mv-hero-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.mv-hero-left {
+  color: #ffffff;
+}
+
+.mv-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  border-radius: 9999px;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.2);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.mv-hero-badge svg { width: 1rem; height: 1rem; }
+
+.mv-hero-h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.mv-hero-h1 .mv-italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mv-primary-glow);
+}
+
+.mv-hero-sub {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.75;
+  color: rgba(255,255,255,0.85);
+  max-width: 32rem;
+  margin-bottom: 2rem;
+}
+
+.mv-hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.mv-hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2rem;
+  height: 3.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--mv-primary), var(--mv-primary-glow));
+  border: none;
+  border-radius: var(--mv-radius);
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--mv-shadow-glow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mv-hero-btn-primary:hover { transform: scale(1.05); color: #ffffff; }
+.mv-hero-btn-primary svg { width: 1.25rem; height: 1.25rem; }
+
+.mv-hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 2rem;
+  height: 3.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: var(--mv-radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.mv-hero-btn-secondary:hover { background: rgba(255,255,255,0.2); color: #ffffff; }
+
+.mv-hero-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  font-size: 0.875rem;
+  color: rgba(255,255,255,0.8);
+}
+
+.mv-hero-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.mv-hero-trust-item svg { width: 1rem; height: 1rem; color: var(--mv-primary-glow); }
+
+.mv-hero-right {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.mv-hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, var(--mv-primary-glow) 0%, transparent 70%);
+  opacity: 0.3;
+  filter: blur(3rem);
+}
+
+.mv-hero-bottle {
+  position: relative;
+  z-index: 1;
+  max-height: 600px;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+  animation: mv-float 6s ease-in-out infinite;
+}
+
+.mv-hero-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: var(--mv-background);
+}
+
+.mv-hero-wave svg {
+  display: block;
+  width: 100%;
+  height: 80px;
+}
+
+@keyframes mv-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-18px) rotate(1deg); }
+}
+
+@keyframes mv-fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mv-hero-left {
+  animation: mv-fade-up 0.8s ease-out both;
+}
+
+@media (max-width: 1024px) {
+  .mv-hero-container { grid-template-columns: 1fr; padding: 0 1.5rem; }
+  .mv-hero-right { display: none; }
+}
+
+@media (max-width: 768px) {
+  .mv-hero-section { min-height: auto; padding: 100px 0 80px; }
+  .mv-hero-h1 { font-size: 2.25rem; }
+  .mv-hero-ctas { flex-direction: column; }
+  .mv-hero-btn-primary, .mv-hero-btn-secondary { width: 100%; justify-content: center; }
+}
+</style>
+
+<section class="mv-hero-section" aria-label="{{ section.settings.aria_label | default: 'MossVida Hero' }}">
+  {%- if section.settings.background_image != blank -%}
+    <div class="mv-hero-bg" style="background-image: url('{{ section.settings.background_image | image_url: width: 2000 }}');"></div>
+  {%- endif -%}
+  <div class="mv-hero-gradient-overlay"></div>
+  <div class="mv-hero-bottom-overlay"></div>
+
+  <div class="mv-hero-container">
+    <div class="mv-hero-left">
+      {%- if section.settings.show_badge -%}
+        <div class="mv-hero-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+          </svg>
+          {{ section.settings.badge_text }}
+        </div>
+      {%- endif -%}
+
+      <h1 class="mv-hero-h1">
+        {{ section.settings.heading_line1 }}<br>
+        <span class="mv-italic">{{ section.settings.heading_line2 }}</span>
+      </h1>
+
+      {%- if section.settings.subtext != blank -%}
+        <p class="mv-hero-sub">{{ section.settings.subtext }}</p>
+      {%- endif -%}
+
+      <div class="mv-hero-ctas">
+        {%- if section.settings.cta1_label != blank -%}
+          <a href="{{ section.settings.cta1_url | default: '#' }}" class="mv-hero-btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>
+            </svg>
+            {{ section.settings.cta1_label }}
+          </a>
+        {%- endif -%}
+        {%- if section.settings.cta2_label != blank -%}
+          <a href="{{ section.settings.cta2_url | default: '#' }}" class="mv-hero-btn-secondary">
+            {{ section.settings.cta2_label }}
+          </a>
+        {%- endif -%}
+      </div>
+
+      {%- if section.settings.show_trust_items -%}
+        <div class="mv-hero-trust">
+          {%- for i in (1..4) -%}
+            {%- assign key = 'trust_' | append: i -%}
+            {%- assign val = section.settings[key] -%}
+            {%- if val != blank -%}
+              <div class="mv-hero-trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ val }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.show_product_image -%}
+      <div class="mv-hero-right">
+        <div class="mv-hero-glow"></div>
+        {%- if section.settings.product_image != blank -%}
+          {{ section.settings.product_image | image_url: width: 800 | image_tag: class: 'mv-hero-bottle', alt: section.settings.product_alt | default: 'Product', loading: 'eager' }}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if section.settings.show_wave -%}
+    <div class="mv-hero-wave">
+      <svg viewBox="0 0 1440 80" fill="currentColor" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,40 C360,80 720,0 1440,40 L1440,80 L0,80 Z"/>
+      </svg>
+    </div>
+  {%- endif -%}
+</section>
+
+{% schema %}
+{
+  "name": "MossVida — Hero",
+  "tag": "section",
+  "class": "mv-hero-section-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Hero Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image",
+      "info": "Beach or ocean background image"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "Ocean-sourced wellness"
+    },
+    {
+      "type": "header",
+      "content": "Headline"
+    },
+    {
+      "type": "text",
+      "id": "heading_line1",
+      "label": "Headline — line 1",
+      "default": "Wellness that"
+    },
+    {
+      "type": "text",
+      "id": "heading_line2",
+      "label": "Headline — line 2 (italic)",
+      "default": "flows naturally."
+    },
+    {
+      "type": "header",
+      "content": "Subtext"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext paragraph",
+      "default": "Vegan, organic sea moss gummies — apple-flavored and packed with 92 essential minerals. Two a day. That's it."
+    },
+    {
+      "type": "header",
+      "content": "CTAs"
+    },
+    {
+      "type": "text",
+      "id": "cta1_label",
+      "label": "Primary CTA label",
+      "default": "Shop now — $125"
+    },
+    {
+      "type": "url",
+      "id": "cta1_url",
+      "label": "Primary CTA URL"
+    },
+    {
+      "type": "text",
+      "id": "cta2_label",
+      "label": "Secondary CTA label",
+      "default": "Learn more"
+    },
+    {
+      "type": "url",
+      "id": "cta2_url",
+      "label": "Secondary CTA URL"
+    },
+    {
+      "type": "header",
+      "content": "Trust Items"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust_items",
+      "label": "Show trust items",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Trust item 1",
+      "default": "Vegan"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Trust item 2",
+      "default": "Organic"
+    },
+    {
+      "type": "text",
+      "id": "trust_3",
+      "label": "Trust item 3",
+      "default": "Non-GMO"
+    },
+    {
+      "type": "text",
+      "id": "trust_4",
+      "label": "Trust item 4",
+      "default": "Gluten-Free"
+    },
+    {
+      "type": "header",
+      "content": "Product Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_image",
+      "label": "Show product image",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image",
+      "info": "Bottle or product photo"
+    },
+    {
+      "type": "text",
+      "id": "product_alt",
+      "label": "Product image alt text",
+      "default": "MossVida Sea Moss Gummies"
+    },
+    {
+      "type": "header",
+      "content": "Wave Divider"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wave",
+      "label": "Show wave divider",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary teal",
+      "default": "#1d7869"
+    },
+    {
+      "type": "color",
+      "id": "primary_glow_color",
+      "label": "Primary glow aqua",
+      "default": "#22c99e"
+    },
+    {
+      "type": "color",
+      "id": "ocean_deep_color",
+      "label": "Ocean deep",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "ocean_mid_color",
+      "label": "Ocean mid",
+      "default": "#1e707a"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f9f7f2"
+    },
+    {
+      "type": "color",
+      "id": "foreground_color",
+      "label": "Foreground",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#5a7a7f"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#d8e9eb"
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "ARIA label",
+      "default": "MossVida Hero"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MossVida — Hero"
+    }
+  ]
+}
+{% endschema %}

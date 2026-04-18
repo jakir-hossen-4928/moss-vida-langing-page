@@ -1,0 +1,734 @@
+{% comment %}
+  MossVida — Product Section
+  Product section with bottle image, price, quantity selector, and add to cart
+{% endcomment %}
+
+<style>
+.mv-product-section *,
+.mv-product-section *::before,
+.mv-product-section *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mv-product-section {
+  --mv-primary: {{ section.settings.primary_color }};
+  --mv-primary-glow: {{ section.settings.primary_glow_color }};
+  --mv-ocean-deep: {{ section.settings.ocean_deep_color }};
+  --mv-ocean-mid: {{ section.settings.ocean_mid_color }};
+  --mv-background: {{ section.settings.background_color }};
+  --mv-foreground: {{ section.settings.foreground_color }};
+  --mv-muted-foreground: {{ section.settings.muted_color }};
+  --mv-border: {{ section.settings.border_color }};
+  --mv-card: #ffffff;
+  --mv-radius: 1rem;
+  --mv-shadow-soft: 0 4px 20px -4px rgba(0,0,0,0.08);
+  --mv-shadow-glow: 0 20px 60px -20px rgba(0,0,0,0.35);
+  padding: 6rem 0;
+  background: linear-gradient(180deg, {{ section.settings.bg_top }}, {{ section.settings.bg_bottom }});
+  font-family: system-ui, -apple-system, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.mv-product-glow {
+  position: absolute;
+  top: -5rem;
+  right: -5rem;
+  width: 24rem;
+  height: 24rem;
+  background: radial-gradient(circle, var(--mv-primary-glow) 0%, transparent 70%);
+  opacity: 0.2;
+  filter: blur(3rem);
+}
+
+.mv-product-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .mv-product-container { grid-template-columns: 1fr; gap: 3rem; }
+}
+
+.mv-product-images {
+  position: relative;
+}
+
+.mv-product-main-img-wrap {
+  aspect-ratio: 1/1;
+  border-radius: 3rem;
+  background: linear-gradient(135deg, var(--mv-primary), var(--mv-primary-glow));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  overflow: hidden;
+}
+
+.mv-product-main-img-wrap img {
+  max-height: 100%;
+  max-width: 100%;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+  animation: mv-float 6s ease-in-out infinite;
+}
+
+.mv-product-back-img-wrap {
+  position: absolute;
+  bottom: -2rem;
+  right: -1rem;
+  width: 10rem;
+  aspect-ratio: 1/1;
+  border-radius: 1.5rem;
+  background: var(--mv-card);
+  box-shadow: var(--mv-shadow-glow);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  border: 4px solid var(--mv-background);
+}
+
+@media (min-width: 768px) {
+  .mv-product-back-img-wrap { width: 13rem; right: -2rem; }
+}
+
+.mv-product-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mv-product-stars {
+  display: flex;
+  gap: 0.125rem;
+  color: var(--mv-primary);
+}
+
+.mv-product-stars svg { width: 1.25rem; height: 1.25rem; }
+
+.mv-product-rating-text {
+  font-size: 0.875rem;
+  color: var(--mv-muted-foreground);
+  margin-left: 0.5rem;
+}
+
+.mv-product-h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--mv-ocean-deep);
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.mv-product-h2 .mv-flavor {
+  display: block;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--mv-primary);
+  font-size: 0.75em;
+  margin-top: 0.25rem;
+}
+
+.mv-product-desc {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--mv-muted-foreground);
+  margin-bottom: 2rem;
+}
+
+.mv-product-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.mv-product-tag {
+  padding: 0.375rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--mv-card);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mv-ocean-mid);
+  border: 1px solid var(--mv-border);
+}
+
+.mv-product-price-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.mv-product-price {
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--mv-ocean-deep);
+}
+
+.mv-product-price-old {
+  color: var(--mv-muted-foreground);
+  text-decoration: line-through;
+  padding-bottom: 0.5rem;
+}
+
+.mv-product-price-badge {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  background: rgba(0,0,0,0.05);
+  color: var(--mv-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  padding-bottom: 0.25rem;
+}
+
+.mv-product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .mv-product-actions { flex-direction: row; }
+}
+
+.mv-product-qty {
+  display: inline-flex;
+  align-items: center;
+  height: 3.5rem;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  background: var(--mv-card);
+  border: 1px solid var(--mv-border);
+}
+
+.mv-product-qty button {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+  color: var(--mv-foreground);
+}
+
+.mv-product-qty button:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.mv-product-qty svg { width: 1rem; height: 1rem; }
+
+.mv-product-qty span {
+  width: 3rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.125rem;
+}
+
+.mv-product-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 3.5rem;
+  padding: 0 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--mv-primary), var(--mv-primary-glow));
+  border: none;
+  border-radius: var(--mv-radius);
+  cursor: pointer;
+  box-shadow: var(--mv-shadow-glow);
+  transition: transform 0.2s;
+}
+
+.mv-product-btn:hover { transform: scale(1.02); }
+.mv-product-btn svg { width: 1.25rem; height: 1.25rem; }
+
+.mv-product-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: var(--mv-muted-foreground);
+}
+
+.mv-product-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.mv-product-trust-item svg {
+  width: 1rem;
+  height: 1rem;
+  color: var(--mv-primary);
+}
+
+.mv-product-payments {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--mv-muted-foreground);
+}
+
+.mv-product-payment-logos {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mv-product-payment-logo {
+  padding: 0.25rem 0.625rem;
+  border-radius: 0.25rem;
+  background: var(--mv-card);
+  border: 1px solid var(--mv-border);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+@keyframes mv-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-18px) rotate(1deg); }
+}
+
+@media (max-width: 768px) {
+  .mv-product-section { padding: 4rem 0; }
+  .mv-product-container { padding: 0 1.5rem; }
+  .mv-product-main-img-wrap { padding: 2rem; border-radius: 2rem; }
+  .mv-product-price { font-size: 2.5rem; }
+}
+</style>
+
+<section class="mv-product-section" aria-label="{{ section.settings.aria_label | default: 'MossVida Product' }}">
+  <div class="mv-product-glow"></div>
+  <div class="mv-product-container">
+    <div class="mv-product-images">
+      <div class="mv-product-main-img-wrap">
+        {%- if section.settings.product_image != blank -%}
+          {{ section.settings.product_image | image_url: width: 800 | image_tag: alt: section.settings.product_alt | default: 'Product', loading: 'lazy' }}
+        {%- endif -%}
+      </div>
+      {%- if section.settings.back_image != blank -%}
+        <div class="mv-product-back-img-wrap">
+          {{ section.settings.back_image | image_url: width: 400 | image_tag: alt: 'Supplement facts', loading: 'lazy' }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="mv-product-info">
+      {%- if section.settings.show_rating -%}
+        <div class="mv-product-rating">
+          <div class="mv-product-stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            {%- endfor -%}
+          </div>
+          <span class="mv-product-rating-text">{{ section.settings.rating_text }}</span>
+        </div>
+      {%- endif -%}
+
+      <h2 class="mv-product-h2">
+        {{ section.settings.product_name }}
+        {%- if section.settings.flavor != blank -%}
+          <span class="mv-flavor">{{ section.settings.flavor }}</span>
+        {%- endif -%}
+      </h2>
+
+      {%- if section.settings.product_desc != blank -%}
+        <p class="mv-product-desc">{{ section.settings.product_desc }}</p>
+      {%- endif -%}
+
+      <div class="mv-product-tags">
+        {%- for i in (1..5) -%}
+          {%- assign tag_key = 'tag_' | append: i -%}
+          {%- assign tag = section.settings[tag_key] -%}
+          {%- if tag != blank -%}
+            <span class="mv-product-tag">{{ tag }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+
+      <div class="mv-product-price-row">
+        <span class="mv-product-price">${{ section.settings.price }}</span>
+        {%- if section.settings.old_price != blank -%}
+          <span class="mv-product-price-old">${{ section.settings.old_price }}</span>
+        {%- endif -%}
+        {%- if section.settings.discount_text != blank -%}
+          <span class="mv-product-price-badge">{{ section.settings.discount_text }}</span>
+        {%- endif -%}
+      </div>
+
+      <div class="mv-product-actions">
+        <div class="mv-product-qty">
+          <button type="button" aria-label="Decrease quantity">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"/>
+            </svg>
+          </button>
+          <span>1</span>
+          <button type="button" aria-label="Increase quantity">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14"/><path d="M12 5v14"/>
+            </svg>
+          </button>
+        </div>
+        <button class="mv-product-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>
+          </svg>
+          {{ section.settings.cta_label }}
+        </button>
+      </div>
+
+      {%- if section.settings.show_trust -%}
+        <div class="mv-product-trust">
+          {%- for i in (1..2) -%}
+            {%- assign trust_key = 'trust_' | append: i -%}
+            {%- assign trust = section.settings[trust_key] -%}
+            {%- if trust != blank -%}
+              <div class="mv-product-trust-item">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                {{ trust }}
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_payments -%}
+        <div class="mv-product-payments">
+          <span>We accept</span>
+          <div class="mv-product-payment-logos">
+            {%- for i in (1..5) -%}
+              {%- assign pay_key = 'payment_' | append: i -%}
+              {%- assign pay = section.settings[pay_key] -%}
+              {%- if pay != blank -%}
+                <span class="mv-product-payment-logo">{{ pay }}</span>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const section = document.querySelector('.mv-product-section');
+  if (!section) return;
+  
+  const qtySpan = section.querySelector('.mv-product-qty span');
+  const buttons = section.querySelectorAll('.mv-product-qty button');
+  const btnLabel = section.querySelector('.mv-product-btn');
+  const basePrice = {{ section.settings.price | times: 1 }};
+  
+  let qty = 1;
+  
+  function update() {
+    qtySpan.textContent = qty;
+    if (btnLabel) {
+      btnLabel.innerHTML = btnLabel.innerHTML.replace(/\$\d+/, '$' + (basePrice * qty));
+    }
+  }
+  
+  if (buttons[0]) buttons[0].addEventListener('click', () => { qty = Math.max(1, qty - 1); update(); });
+  if (buttons[1]) buttons[1].addEventListener('click', () => { qty++; update(); });
+});
+</script>
+
+{% schema %}
+{
+  "name": "MossVida — Product",
+  "tag": "section",
+  "class": "mv-product-section-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Main product image (bottle front)"
+    },
+    {
+      "type": "image_picker",
+      "id": "back_image",
+      "label": "Back image (supplement facts)"
+    },
+    {
+      "type": "text",
+      "id": "product_alt",
+      "label": "Image alt text",
+      "default": "MossVida Sea Moss Gummies bottle"
+    },
+    {
+      "type": "header",
+      "content": "Rating"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Rating text",
+      "default": "2,847 reviews"
+    },
+    {
+      "type": "header",
+      "content": "Product Info"
+    },
+    {
+      "type": "text",
+      "id": "product_name",
+      "label": "Product name",
+      "default": "Sea Moss Gummies"
+    },
+    {
+      "type": "text",
+      "id": "flavor",
+      "label": "Flavor (italic accent)",
+      "default": "Apple Flavored"
+    },
+    {
+      "type": "textarea",
+      "id": "product_desc",
+      "label": "Product description",
+      "default": "The daily essential your wellness routine has been missing. Vegan, organic apple gummies that deliver the full power of sea moss — without the harsh taste. 60 gummies. 30-day supply. Pure simplicity."
+    },
+    {
+      "type": "header",
+      "content": "Tags"
+    },
+    {
+      "type": "text",
+      "id": "tag_1",
+      "label": "Tag 1",
+      "default": "Vegan"
+    },
+    {
+      "type": "text",
+      "id": "tag_2",
+      "label": "Tag 2",
+      "default": "Organic"
+    },
+    {
+      "type": "text",
+      "id": "tag_3",
+      "label": "Tag 3",
+      "default": "Non-GMO"
+    },
+    {
+      "type": "text",
+      "id": "tag_4",
+      "label": "Tag 4",
+      "default": "Gluten-Free"
+    },
+    {
+      "type": "text",
+      "id": "tag_5",
+      "label": "Tag 5",
+      "default": "60 Count"
+    },
+    {
+      "type": "header",
+      "content": "Pricing"
+    },
+    {
+      "type": "text",
+      "id": "price",
+      "label": "Current price",
+      "default": "125"
+    },
+    {
+      "type": "text",
+      "id": "old_price",
+      "label": "Compare at price (optional)",
+      "default": "159"
+    },
+    {
+      "type": "text",
+      "id": "discount_text",
+      "label": "Discount badge text",
+      "default": "Save 21%"
+    },
+    {
+      "type": "header",
+      "content": "CTA"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "Add to cart button label",
+      "default": "Add to cart — $125"
+    },
+    {
+      "type": "header",
+      "content": "Trust Items"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_trust",
+      "label": "Show trust items",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trust_1",
+      "label": "Trust item 1",
+      "default": "Free US shipping"
+    },
+    {
+      "type": "text",
+      "id": "trust_2",
+      "label": "Trust item 2",
+      "default": "30-day guarantee"
+    },
+    {
+      "type": "header",
+      "content": "Payment Logos"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payments",
+      "label": "Show payment logos",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "payment_1",
+      "label": "Payment 1",
+      "default": "VISA"
+    },
+    {
+      "type": "text",
+      "id": "payment_2",
+      "label": "Payment 2",
+      "default": "MC"
+    },
+    {
+      "type": "text",
+      "id": "payment_3",
+      "label": "Payment 3",
+      "default": "AMEX"
+    },
+    {
+      "type": "text",
+      "id": "payment_4",
+      "label": "Payment 4",
+      "default": "Pay"
+    },
+    {
+      "type": "text",
+      "id": "payment_5",
+      "label": "Payment 5",
+      "default": "PayPal"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary teal",
+      "default": "#1d7869"
+    },
+    {
+      "type": "color",
+      "id": "primary_glow_color",
+      "label": "Primary glow aqua",
+      "default": "#22c99e"
+    },
+    {
+      "type": "color",
+      "id": "ocean_deep_color",
+      "label": "Ocean deep",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "ocean_mid_color",
+      "label": "Ocean mid",
+      "default": "#1e707a"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f9f7f2"
+    },
+    {
+      "type": "color",
+      "id": "foreground_color",
+      "label": "Foreground",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#5a7a7f"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#d8e9eb"
+    },
+    {
+      "type": "color",
+      "id": "bg_top",
+      "label": "Section gradient top",
+      "default": "#f0f9fa"
+    },
+    {
+      "type": "color",
+      "id": "bg_bottom",
+      "label": "Section gradient bottom",
+      "default": "#d8f0f2"
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "ARIA label",
+      "default": "MossVida Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MossVida — Product"
+    }
+  ]
+}
+{% endschema %}

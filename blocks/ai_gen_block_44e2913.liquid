@@ -1,0 +1,712 @@
+{% doc %}
+  @prompt
+    "Build a premium, fully dynamic Shopify theme section titled 'MossVida — Footer'. The section must be built using Shopify Liquid and Vanilla CSS, following these technical and design requirements:
+    
+    1. Layout & Responsiveness:
+    
+    Mobile & Desktop Optimized: Use a CSS Grid or Flexbox system that stacks columns on mobile (max-width: 767px) and displays up to 4 columns on desktop.
+    Width Control: Include a range setting in the schema for 'Container Max Width' (1000px to 1600px) and 'Section Padding' (Top/Bottom).
+    2. Dynamic Schema Blocks: Implement a block-based system so I can add/reorder these elements:
+    
+    Link List Block: To select and display Shopify navigation menus.
+    Brand Info Block: Includes an image picker for the logo, a text area for a brand bio, and an optional 'Show Social Icons' toggle.
+    Newsletter Block: A styled AJAX-ready newsletter signup form with customizable heading and subtext.
+    Contact/Info Block: For phone, email, and address with SVG icon support.
+    3. Customization Options (Section Settings):
+    
+    Colors: Pickers for 'Background Gradient Start', 'Background Gradient End', 'Text Color', 'Accent/Link Color', and 'Border Color'.
+    Typography: Range sliders for heading and body font sizes (Desktop vs. Mobile).
+    Bottom Bar: A setting for copyright text and a toggle for 'Show Payment Icons'.
+    4. Visual Aesthetics (MossVida Style):
+    
+    Use a sleek, modern design with subtle transitions on link hovers.
+    Ensure the background supports a linear-gradient(135deg, #0c2b35 0%, #1a474b 100%) by default.
+    Use fluid typography with clamp() for headings.
+    5. Clean Code: High-quality Liquid filters for images (image_url), proper ARIA labels for accessibility, and a single <style> tag within the section for encapsulated styling."
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .mossvida-footer-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, {{ block.settings.bg_gradient_start }} 0%, {{ block.settings.bg_gradient_end }} 100%);
+    color: {{ block.settings.text_color }};
+    padding: {{ block.settings.section_padding_top }}px 0 {{ block.settings.section_padding_bottom }}px;
+  }
+
+  .mossvida-footer-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.container_max_width }}px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .mossvida-footer-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  @media (min-width: 768px) {
+    .mossvida-footer-grid-{{ ai_gen_id }} {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+    }
+  }
+
+  .mossvida-footer-column-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mossvida-footer-heading-{{ ai_gen_id }} {
+    font-size: clamp({{ block.settings.heading_font_size_mobile }}px, 2vw, {{ block.settings.heading_font_size_desktop }}px);
+    font-weight: 600;
+    margin: 0 0 12px;
+    color: {{ block.settings.text_color }};
+  }
+
+  .mossvida-footer-logo-{{ ai_gen_id }} {
+    max-width: 180px;
+    height: auto;
+    margin-bottom: 12px;
+  }
+
+  .mossvida-footer-bio-{{ ai_gen_id }} {
+    font-size: clamp({{ block.settings.body_font_size_mobile }}px, 1.5vw, {{ block.settings.body_font_size_desktop }}px);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .mossvida-footer-social-{{ ai_gen_id }} {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .mossvida-footer-social-link-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: {{ block.settings.text_color }};
+    transition: all 0.3s ease;
+  }
+
+  .mossvida-footer-social-link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.accent_color }};
+    transform: translateY(-2px);
+  }
+
+  .mossvida-footer-social-link-{{ ai_gen_id }} svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+
+  .mossvida-footer-menu-{{ ai_gen_id }} {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mossvida-footer-menu-item-{{ ai_gen_id }} {
+    margin-bottom: 10px;
+  }
+
+  .mossvida-footer-menu-link-{{ ai_gen_id }} {
+    color: {{ block.settings.text_color }};
+    text-decoration: none;
+    font-size: clamp({{ block.settings.body_font_size_mobile }}px, 1.5vw, {{ block.settings.body_font_size_desktop }}px);
+    transition: color 0.3s ease;
+    display: inline-block;
+  }
+
+  .mossvida-footer-menu-link-{{ ai_gen_id }}:hover {
+    color: {{ block.settings.accent_color }};
+  }
+
+  .mossvida-footer-contact-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: clamp({{ block.settings.body_font_size_mobile }}px, 1.5vw, {{ block.settings.body_font_size_desktop }}px);
+  }
+
+  .mossvida-footer-contact-icon-{{ ai_gen_id }} {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .mossvida-footer-contact-icon-{{ ai_gen_id }} svg {
+    width: 100%;
+    height: 100%;
+    fill: {{ block.settings.accent_color }};
+  }
+
+  .mossvida-footer-newsletter-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mossvida-footer-newsletter-text-{{ ai_gen_id }} {
+    font-size: clamp({{ block.settings.body_font_size_mobile }}px, 1.5vw, {{ block.settings.body_font_size_desktop }}px);
+    margin: 0;
+  }
+
+  .mossvida-footer-newsletter-form-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+  }
+
+  .mossvida-footer-newsletter-input-{{ ai_gen_id }} {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid {{ block.settings.border_color }};
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: {{ block.settings.text_color }};
+    font-size: 14px;
+  }
+
+  .mossvida-footer-newsletter-input-{{ ai_gen_id }}::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .mossvida-footer-newsletter-button-{{ ai_gen_id }} {
+    padding: 12px 24px;
+    background-color: {{ block.settings.accent_color }};
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .mossvida-footer-newsletter-button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.text_color }};
+    color: {{ block.settings.bg_gradient_start }};
+  }
+
+  .mossvida-footer-newsletter-success-{{ ai_gen_id }} {
+    color: #4ade80;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .mossvida-footer-newsletter-error-{{ ai_gen_id }} {
+    color: #f87171;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+  .mossvida-footer-bottom-{{ ai_gen_id }} {
+    border-top: 1px solid {{ block.settings.border_color }};
+    padding-top: 30px;
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .mossvida-footer-bottom-{{ ai_gen_id }} {
+      flex-direction: row;
+      justify-content: space-between;
+      text-align: left;
+    }
+  }
+
+  .mossvida-footer-copyright-{{ ai_gen_id }} {
+    font-size: clamp({{ block.settings.body_font_size_mobile }}px, 1.5vw, {{ block.settings.body_font_size_desktop }}px);
+    margin: 0;
+  }
+
+  .mossvida-footer-payment-icons-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  @media (min-width: 768px) {
+    .mossvida-footer-payment-icons-{{ ai_gen_id }} {
+      justify-content: flex-end;
+    }
+  }
+
+  .mossvida-footer-payment-icon-{{ ai_gen_id }} {
+    height: 24px;
+    width: auto;
+  }
+{% endstyle %}
+
+<mossvida-footer-{{ ai_gen_id }} class="mossvida-footer-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="mossvida-footer-container-{{ ai_gen_id }}">
+    <div class="mossvida-footer-grid-{{ ai_gen_id }}">
+      <div class="mossvida-footer-column-{{ ai_gen_id }}">
+        {% if block.settings.logo %}
+          <img
+            src="{{ block.settings.logo | image_url: width: 360 }}"
+            alt="{{ shop.name }}"
+            class="mossvida-footer-logo-{{ ai_gen_id }}"
+            loading="lazy"
+            width="180"
+            height="auto"
+          >
+        {% endif %}
+        
+        {% if block.settings.brand_bio != blank %}
+          <p class="mossvida-footer-bio-{{ ai_gen_id }}">{{ block.settings.brand_bio }}</p>
+        {% endif %}
+
+        {% if block.settings.show_social_icons %}
+          <div class="mossvida-footer-social-{{ ai_gen_id }}">
+            {% if block.settings.social_facebook != blank %}
+              <a href="{{ block.settings.social_facebook }}" class="mossvida-footer-social-link-{{ ai_gen_id }}" aria-label="Facebook" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              </a>
+            {% endif %}
+            {% if block.settings.social_instagram != blank %}
+              <a href="{{ block.settings.social_instagram }}" class="mossvida-footer-social-link-{{ ai_gen_id }}" aria-label="Instagram" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+            {% endif %}
+            {% if block.settings.social_twitter != blank %}
+              <a href="{{ block.settings.social_twitter }}" class="mossvida-footer-social-link-{{ ai_gen_id }}" aria-label="Twitter" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/></svg>
+              </a>
+            {% endif %}
+            {% if block.settings.social_youtube != blank %}
+              <a href="{{ block.settings.social_youtube }}" class="mossvida-footer-social-link-{{ ai_gen_id }}" aria-label="YouTube" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+
+      <div class="mossvida-footer-column-{{ ai_gen_id }}">
+        {% if block.settings.menu_1_heading != blank %}
+          <h3 class="mossvida-footer-heading-{{ ai_gen_id }}">{{ block.settings.menu_1_heading }}</h3>
+        {% endif %}
+        
+        {% if block.settings.menu_1 != blank %}
+          <ul class="mossvida-footer-menu-{{ ai_gen_id }}">
+            {% for link in linklists[block.settings.menu_1].links %}
+              <li class="mossvida-footer-menu-item-{{ ai_gen_id }}">
+                <a href="{{ link.url }}" class="mossvida-footer-menu-link-{{ ai_gen_id }}">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div class="mossvida-footer-column-{{ ai_gen_id }}">
+        {% if block.settings.menu_2_heading != blank %}
+          <h3 class="mossvida-footer-heading-{{ ai_gen_id }}">{{ block.settings.menu_2_heading }}</h3>
+        {% endif %}
+        
+        {% if block.settings.menu_2 != blank %}
+          <ul class="mossvida-footer-menu-{{ ai_gen_id }}">
+            {% for link in linklists[block.settings.menu_2].links %}
+              <li class="mossvida-footer-menu-item-{{ ai_gen_id }}">
+                <a href="{{ link.url }}" class="mossvida-footer-menu-link-{{ ai_gen_id }}">{{ link.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div class="mossvida-footer-column-{{ ai_gen_id }}">
+        {% if block.settings.newsletter_heading != blank %}
+          <h3 class="mossvida-footer-heading-{{ ai_gen_id }}">{{ block.settings.newsletter_heading }}</h3>
+        {% endif %}
+        
+        <div class="mossvida-footer-newsletter-{{ ai_gen_id }}">
+          {% if block.settings.newsletter_subtext != blank %}
+            <p class="mossvida-footer-newsletter-text-{{ ai_gen_id }}">{{ block.settings.newsletter_subtext }}</p>
+          {% endif %}
+          
+          {%- form 'customer', id: 'mossvida-newsletter-form-' | append: ai_gen_id -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+            <div class="mossvida-footer-newsletter-form-{{ ai_gen_id }}">
+              <input
+                type="email"
+                name="contact[email]"
+                class="mossvida-footer-newsletter-input-{{ ai_gen_id }}"
+                placeholder="Enter your email"
+                aria-label="Email address"
+                aria-required="true"
+                required
+                {% if form.errors %}
+                  aria-invalid="true"
+                  aria-describedby="mossvida-newsletter-error-{{ ai_gen_id }}"
+                {% endif %}
+                {% if form.posted_successfully? %}
+                  aria-describedby="mossvida-newsletter-success-{{ ai_gen_id }}"
+                {% endif %}
+              >
+              <button type="submit" class="mossvida-footer-newsletter-button-{{ ai_gen_id }}">
+                Subscribe
+              </button>
+            </div>
+            {%- if form.errors -%}
+              <div id="mossvida-newsletter-error-{{ ai_gen_id }}" class="mossvida-footer-newsletter-error-{{ ai_gen_id }}">
+                {{ form.errors.messages.email }}
+              </div>
+            {%- endif -%}
+            {%- if form.posted_successfully? -%}
+              <div id="mossvida-newsletter-success-{{ ai_gen_id }}" class="mossvida-footer-newsletter-success-{{ ai_gen_id }}">
+                Thanks for subscribing!
+              </div>
+            {%- endif -%}
+          {%- endform -%}
+        </div>
+
+        {% if block.settings.show_contact_info %}
+          <div style="margin-top: 20px;">
+            {% if block.settings.contact_phone != blank %}
+              <div class="mossvida-footer-contact-item-{{ ai_gen_id }}">
+                <div class="mossvida-footer-contact-icon-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.01 15.38c-1.23 0-2.42-.2-3.53-.56a.977.977 0 00-1.01.24l-1.57 1.97c-2.83-1.35-5.48-3.9-6.89-6.83l1.95-1.66c.27-.28.35-.67.24-1.02-.37-1.11-.56-2.3-.56-3.53 0-.54-.45-.99-.99-.99H4.19C3.65 3 3 3.24 3 3.99 3 13.28 10.73 21 20.01 21c.71 0 .99-.63.99-1.18v-3.45c0-.54-.45-.99-.99-.99z"/></svg>
+                </div>
+                <span>{{ block.settings.contact_phone }}</span>
+              </div>
+            {% endif %}
+
+            {% if block.settings.contact_email != blank %}
+              <div class="mossvida-footer-contact-item-{{ ai_gen_id }}">
+                <div class="mossvida-footer-contact-icon-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </div>
+                <span>{{ block.settings.contact_email }}</span>
+              </div>
+            {% endif %}
+
+            {% if block.settings.contact_address != blank %}
+              <div class="mossvida-footer-contact-item-{{ ai_gen_id }}">
+                <div class="mossvida-footer-contact-icon-{{ ai_gen_id }}">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </div>
+                <span>{{ block.settings.contact_address }}</span>
+              </div>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mossvida-footer-bottom-{{ ai_gen_id }}">
+      <p class="mossvida-footer-copyright-{{ ai_gen_id }}">
+        {% if block.settings.copyright_text != blank %}
+          {{ block.settings.copyright_text }}
+        {% else %}
+          &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. All rights reserved.
+        {% endif %}
+      </p>
+
+      {% if block.settings.show_payment_icons %}
+        <div class="mossvida-footer-payment-icons-{{ ai_gen_id }}">
+          {% for type in shop.enabled_payment_types %}
+            {{ type | payment_type_svg_tag: class: 'mossvida-footer-payment-icon-' | append: ai_gen_id }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</mossvida-footer-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class MossvidaFooter{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.setupNewsletterForm();
+      }
+
+      setupNewsletterForm() {
+        const form = this.querySelector('form[id^="mossvida-newsletter-form"]');
+        if (!form) return;
+
+        form.addEventListener('submit', function(e) {
+          const emailInput = form.querySelector('input[type="email"]');
+          if (emailInput && !emailInput.value) {
+            e.preventDefault();
+          }
+        });
+      }
+    }
+
+    customElements.define('mossvida-footer-{{ ai_gen_id }}', MossvidaFooter{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "MossVida — Footer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Container"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "label": "Max width",
+      "min": 1000,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Padding top",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Padding bottom",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_start",
+      "label": "Background gradient start",
+      "default": "#0c2b35"
+    },
+    {
+      "type": "color",
+      "id": "bg_gradient_end",
+      "label": "Background gradient end",
+      "default": "#1a474b"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent/Link",
+      "default": "#4ade80"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#2d5a5f"
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "Heading size (desktop)",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Heading size (mobile)",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "body_font_size_desktop",
+      "label": "Body size (desktop)",
+      "min": 12,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "body_font_size_mobile",
+      "label": "Body size (mobile)",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Brand info"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_bio",
+      "label": "Brand bio",
+      "default": "Crafting premium experiences for modern living."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_icons",
+      "label": "Show social icons",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "social_facebook",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "url",
+      "id": "social_twitter",
+      "label": "Twitter URL"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube URL"
+    },
+    {
+      "type": "header",
+      "content": "Menu 1"
+    },
+    {
+      "type": "text",
+      "id": "menu_1_heading",
+      "label": "Heading",
+      "default": "Quick links"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_1",
+      "label": "Menu"
+    },
+    {
+      "type": "header",
+      "content": "Menu 2"
+    },
+    {
+      "type": "text",
+      "id": "menu_2_heading",
+      "label": "Heading",
+      "default": "Customer care"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_2",
+      "label": "Menu"
+    },
+    {
+      "type": "header",
+      "content": "Newsletter"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_heading",
+      "label": "Heading",
+      "default": "Stay connected"
+    },
+    {
+      "type": "textarea",
+      "id": "newsletter_subtext",
+      "label": "Subtext",
+      "default": "Subscribe to get special offers and updates."
+    },
+    {
+      "type": "header",
+      "content": "Contact info"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_info",
+      "label": "Show contact info",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "contact_phone",
+      "label": "Phone"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Email"
+    },
+    {
+      "type": "textarea",
+      "id": "contact_address",
+      "label": "Address"
+    },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "MossVida — Footer"
+    }
+  ]
+}
+{% endschema %}

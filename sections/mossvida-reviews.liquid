@@ -1,0 +1,274 @@
+{% comment %}
+  MossVida — Reviews Section
+  Fixed: Range steps, responsive typography, and mobile/desktop layout toggles.
+{% endcomment %}
+
+<style>
+.mv-reviews-section-{{ section.id }} * { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mv-reviews-section-{{ section.id }} {
+  --mv-primary: {{ section.settings.primary_color }};
+  --mv-ocean-deep: {{ section.settings.ocean_deep_color }};
+  --mv-background: {{ section.settings.background_color }};
+  --mv-foreground: {{ section.settings.foreground_color }};
+  --mv-muted-foreground: {{ section.settings.muted_color }};
+  --mv-border: {{ section.settings.border_color }};
+  --mv-card: #ffffff;
+  
+  padding-top: {{ section.settings.padding_top }}px;
+  padding-bottom: {{ section.settings.padding_bottom }}px;
+  background: var(--mv-background);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.mv-reviews-container-{{ section.id }} {
+  max-width: {{ section.settings.container_width }}px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.mv-reviews-header {
+  text-align: {{ section.settings.header_alignment }};
+  margin-bottom: {{ section.settings.header_margin_bottom }}px;
+}
+
+.mv-reviews-kicker {
+  font-size: {{ section.settings.kicker_size }}px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--mv-primary);
+  margin-bottom: 0.5rem;
+}
+
+.mv-reviews-h2 {
+  font-size: {{ section.settings.heading_size }}px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--mv-ocean-deep);
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+.mv-reviews-rating {
+  display: flex;
+  align-items: center;
+  justify-content: {% if section.settings.header_alignment == 'center' %}center{% else %}flex-start{% endif %};
+  gap: 0.5rem;
+}
+
+.mv-reviews-stars {
+  display: flex;
+  gap: 2px;
+  color: var(--mv-primary);
+}
+
+.mv-reviews-stars svg { width: {{ section.settings.star_size }}px; height: {{ section.settings.star_size }}px; }
+
+.mv-reviews-rating-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--mv-ocean-deep);
+}
+
+.mv-reviews-grid-{{ section.id }} {
+  display: grid;
+  grid-template-columns: repeat({{ section.settings.cols_desktop }}, 1fr);
+  gap: {{ section.settings.grid_gap }}px;
+}
+
+.mv-review-card {
+  padding: {{ section.settings.card_padding }}px;
+  border-radius: {{ section.settings.card_radius }}px;
+  background: var(--mv-card);
+  border: 1px solid var(--mv-border);
+  box-shadow: 0 4px 20px -4px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease;
+}
+
+.mv-review-card:hover {
+  transform: translateY(-5px);
+}
+
+.mv-card-stars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 1rem;
+  color: var(--mv-primary);
+}
+.mv-card-stars svg { width: 16px; height: 16px; }
+
+.mv-review-text {
+  font-size: {{ section.settings.review_text_size }}px;
+  line-height: 1.6;
+  color: var(--mv-foreground);
+  font-style: italic;
+  margin-bottom: 1.5rem;
+}
+
+.mv-review-author {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--mv-ocean-deep);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+@media (max-width: 1024px) {
+  .mv-reviews-grid-{{ section.id }} { 
+    grid-template-columns: repeat({{ section.settings.cols_tablet }}, 1fr); 
+  }
+}
+
+@media (max-width: 768px) {
+  .mv-reviews-section-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top_mobile }}px;
+    padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+  }
+  .mv-reviews-container-{{ section.id }} { padding: 0 1.5rem; }
+  .mv-reviews-header { 
+    text-align: {{ section.settings.mobile_header_alignment }};
+    margin-bottom: 2.5rem;
+  }
+  .mv-reviews-h2 { font-size: {{ section.settings.heading_size_mobile }}px; }
+  .mv-reviews-grid-{{ section.id }} { 
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .mv-reviews-rating {
+    justify-content: {% if section.settings.mobile_header_alignment == 'center' %}center{% else %}flex-start{% endif %};
+  }
+}
+</style>
+
+<section class="mv-reviews-section-{{ section.id }}" aria-label="{{ section.settings.aria_label }}">
+  <div class="mv-reviews-container-{{ section.id }}">
+    <div class="mv-reviews-header">
+      {%- if section.settings.kicker != blank -%}
+        <p class="mv-reviews-kicker">{{ section.settings.kicker }}</p>
+      {%- endif -%}
+      <h2 class="mv-reviews-h2">{{ section.settings.heading }}</h2>
+      
+      {%- if section.settings.show_overall_rating -%}
+        <div class="mv-reviews-rating">
+          <div class="mv-reviews-stars" aria-hidden="true">
+            {%- for i in (1..5) -%}
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+              </svg>
+            {%- endfor -%}
+          </div>
+          <span class="mv-reviews-rating-text">{{ section.settings.overall_rating_text }}</span>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="mv-reviews-grid-{{ section.id }}">
+      {%- for i in (1..3) -%}
+        {%- assign name_key = 'review_name_' | append: i -%}
+        {%- assign text_key = 'review_text_' | append: i -%}
+        {%- assign rating_key = 'review_rating_' | append: i -%}
+        {%- assign name = section.settings[name_key] -%}
+        {%- assign text = section.settings[text_key] -%}
+        {%- assign rating = section.settings[rating_key] -%}
+        
+        {%- if name != blank or text != blank -%}
+          <div class="mv-review-card">
+            <div class="mv-card-stars" aria-hidden="true">
+              {%- for r in (1..rating) -%}
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+              {%- endfor -%}
+            </div>
+            {%- if text != blank -%}<p class="mv-review-text">"{{ text }}"</p>{%- endif -%}
+            {%- if name != blank -%}<p class="mv-review-author">{{ name }}</p>{%- endif -%}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "MossVida — Reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout Settings"
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Container Width",
+      "min": 1000,
+      "max": 1600,
+      "step": 10,
+      "unit": "px",
+      "default": 1200
+    },
+    { "type": "range", "id": "padding_top", "label": "Top Padding (Desktop)", "min": 0, "max": 150, "step": 5, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom Padding (Desktop)", "min": 0, "max": 150, "step": 5, "unit": "px", "default": 100 },
+    { "type": "range", "id": "padding_top_mobile", "label": "Top Padding (Mobile)", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 60 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Bottom Padding (Mobile)", "min": 0, "max": 100, "step": 5, "unit": "px", "default": 60 },
+    {
+      "type": "header",
+      "content": "Grid Settings"
+    },
+    { "type": "range", "id": "cols_desktop", "label": "Desktop Columns", "min": 1, "max": 4, "step": 1, "default": 3 },
+    { "type": "range", "id": "cols_tablet", "label": "Tablet Columns", "min": 1, "max": 3, "step": 1, "default": 2 },
+    { "type": "range", "id": "grid_gap", "label": "Grid Gap", "min": 10, "max": 60, "step": 2, "unit": "px", "default": 24 },
+    {
+      "type": "header",
+      "content": "Header Typography"
+    },
+    { "type": "select", "id": "header_alignment", "label": "Header Alignment (Desktop)", "options": [ {"value": "left", "label": "Left"}, {"value": "center", "label": "Center"} ], "default": "center" },
+    { "type": "select", "id": "mobile_header_alignment", "label": "Header Alignment (Mobile)", "options": [ {"value": "left", "label": "Left"}, {"value": "center", "label": "Center"} ], "default": "center" },
+    { "type": "text", "id": "kicker", "label": "Kicker text", "default": "Loved by thousands" },
+    { "type": "range", "id": "kicker_size", "label": "Kicker Font Size", "min": 10, "max": 20, "step": 1, "unit": "px", "default": 14 },
+    { "type": "textarea", "id": "heading", "label": "Heading", "default": "Real results, real people." },
+    { "type": "range", "id": "heading_size", "label": "Heading Size (Desktop)", "min": 24, "max": 64, "step": 2, "unit": "px", "default": 48 },
+    { "type": "range", "id": "heading_size_mobile", "label": "Heading Size (Mobile)", "min": 20, "max": 48, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "header_margin_bottom", "label": "Header Margin Bottom", "min": 20, "max": 100, "step": 5, "unit": "px", "default": 60 },
+    {
+      "type": "header",
+      "content": "Overall Rating"
+    },
+    { "type": "checkbox", "id": "show_overall_rating", "label": "Show Overall Rating", "default": true },
+    { "type": "text", "id": "overall_rating_text", "label": "Rating Text", "default": "4.9 from 2,847 reviews" },
+    { "type": "range", "id": "star_size", "label": "Overall Star Size", "min": 12, "max": 32, "step": 2, "unit": "px", "default": 20 },
+    {
+      "type": "header",
+      "content": "Card Styles"
+    },
+    { "type": "range", "id": "card_padding", "label": "Internal Card Padding", "min": 10, "max": 60, "step": 2, "unit": "px", "default": 32 },
+    { "type": "range", "id": "card_radius", "label": "Card Corner Radius", "min": 0, "max": 40, "step": 2, "unit": "px", "default": 24 },
+    { "type": "range", "id": "review_text_size", "label": "Review Font Size", "min": 14, "max": 24, "step": 1, "unit": "px", "default": 16 },
+    {
+      "type": "header",
+      "content": "Review Content"
+    },
+    { "type": "text", "id": "review_name_1", "label": "Name 1", "default": "Amelia R." },
+    { "type": "textarea", "id": "review_text_1", "label": "Review 1", "default": "Finally a sea moss product I actually look forward to taking. My skin is glowing." },
+    { "type": "range", "id": "review_rating_1", "label": "Rating 1", "min": 1, "max": 5, "step": 1, "default": 5 },
+    { "type": "text", "id": "review_name_2", "label": "Name 2", "default": "Marcus T." },
+    { "type": "textarea", "id": "review_text_2", "label": "Review 2", "default": "The energy boost is real. No crash, no jitters — just smooth focus all day." },
+    { "type": "range", "id": "review_rating_2", "label": "Rating 2", "min": 1, "max": 5, "step": 1, "default": 5 },
+    { "type": "text", "id": "review_name_3", "label": "Name 3", "default": "Jasmine K." },
+    { "type": "textarea", "id": "review_text_3", "label": "Review 3", "default": "Tastes like a treat. My digestion has never felt better. Worth every penny." },
+    { "type": "range", "id": "review_rating_3", "label": "Rating 3", "min": 1, "max": 5, "step": 1, "default": 5 },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    { "type": "color", "id": "primary_color", "label": "Star & Kicker Color", "default": "#1d7869" },
+    { "type": "color", "id": "ocean_deep_color", "label": "Headings & Author", "default": "#0c313d" },
+    { "type": "color", "id": "background_color", "label": "Section Background", "default": "#f9f7f2" },
+    { "type": "color", "id": "foreground_color", "label": "Review Text", "default": "#0c313d" },
+    { "type": "color", "id": "border_color", "label": "Card Border", "default": "#d8e9eb" },
+    { "type": "text", "id": "aria_label", "label": "ARIA label", "default": "Customer Reviews" }
+  ],
+  "presets": [ { "name": "MossVida — Reviews" } ]
+}
+{% endschema %}

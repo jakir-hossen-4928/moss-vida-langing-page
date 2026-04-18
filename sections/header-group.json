@@ -1,0 +1,158 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header Group",
+  "sections": {
+    "header-mobile": {
+      "type": "header-mobile",
+      "blocks": {
+        "7de2266e-0cd4-4fda-9f09-06f75a17f944": {
+          "type": "menu",
+          "settings": {
+            "color": "#232323",
+            "menu_tab_bg": "#000000"
+          }
+        },
+        "163e2cb5-14f2-4af6-9ac3-77193c082f53": {
+          "type": "search",
+          "settings": {
+            "icon": "1",
+            "popup_action": false,
+            "color": "#232323"
+          }
+        },
+        "550fbd21-75fb-4051-9dee-77d91b5239f0": {
+          "type": "logo",
+          "settings": {
+            "logo_width_mobile": 65,
+            "logo_text": "",
+            "logo_font_size": 20,
+            "logo_font_weight": "900",
+            "logo_text_transform": "uppercase",
+            "logo_color": "#232323",
+            "alignment": "center"
+          }
+        },
+        "20dae707-64c0-4ea3-a05e-561cae9836d8": {
+          "type": "customer",
+          "settings": {
+            "icon": "1",
+            "color": "#232323"
+          }
+        },
+        "633f9dae-3f65-4bda-9ca8-9d3e231aaf9d": {
+          "type": "cart",
+          "settings": {
+            "icon": "2",
+            "show_cart_count_bubble": true,
+            "color": "#232323",
+            "color_bubble": "#ffffff",
+            "bg_bubble": "#232323"
+          }
+        }
+      },
+      "block_order": [
+        "7de2266e-0cd4-4fda-9f09-06f75a17f944",
+        "163e2cb5-14f2-4af6-9ac3-77193c082f53",
+        "550fbd21-75fb-4051-9dee-77d91b5239f0",
+        "20dae707-64c0-4ea3-a05e-561cae9836d8",
+        "633f9dae-3f65-4bda-9ca8-9d3e231aaf9d"
+      ],
+      "disabled": true,
+      "settings": {
+        "background": "#ffffff",
+        "gradient": "",
+        "sticky_header_type": "on_scroll",
+        "enable_transparent": false,
+        "transparent_color": "#ffffff",
+        "transparent_border_color": "",
+        "padding_top": 0,
+        "padding_bottom": 0
+      }
+    },
+    "custom_navbar_WKiHky": {
+      "type": "custom-navbar",
+      "name": "Custom-Navbar",
+      "settings": {
+        "sticky_type": "always",
+        "logo": "shopify://shop_images/Gemini_Generated_Image_u80a2bu80a2bu80a_469c271c-e68b-465d-9694-d1d145f01336.png",
+        "logo_width": 160,
+        "logo_icon_width": 22,
+        "logo_icon_width_mobile": 18,
+        "logo_text_part1": "GREEN",
+        "logo_text_part2": "BOOST",
+        "logo_font_size": 18,
+        "logo_font_size_mobile": 15,
+        "logo_color": "#111111",
+        "menu": "main-menu",
+        "shop_all_url": "#shopify-section-template--21940840464600__1776498521e801feec",
+        "shop_all_label": "Shop Now",
+        "quiz_url": "",
+        "menu_font_size": 14,
+        "mega_eyebrow": "Explore",
+        "mega_card_1_label": "Our Story",
+        "mega_card_1_url": "",
+        "mega_card_1_emoji": "🌿",
+        "mega_card_2_label": "Partner With Us",
+        "mega_card_2_url": "",
+        "mega_card_2_emoji": "🤝",
+        "mega_card_3_label": "Wellness Blog",
+        "mega_card_3_url": "",
+        "mega_card_3_emoji": "📖",
+        "nav_max_width": 1400,
+        "nav_bg": "#f5f2ee",
+        "nav_border_color": "#e0dbd5",
+        "link_color": "#6b6b6b",
+        "link_hover_color": "#111111",
+        "accent_color": "#179e89",
+        "accent_hover_color": "#179e89",
+        "nav_height": 72
+      }
+    },
+    "mossvida_header_t6a3yD": {
+      "type": "mossvida-header",
+      "disabled": true,
+      "name": "MossVida — Header",
+      "settings": {
+        "logo": "shopify://shop_images/logo.png",
+        "logo_alt": "MossVida",
+        "show_logo_text": true,
+        "logo_text": "MossVida",
+        "nav_link_1": "Benefits",
+        "nav_url_1": "",
+        "nav_link_2": "Product",
+        "nav_url_2": "",
+        "nav_link_3": "How it works",
+        "nav_url_3": "",
+        "nav_link_4": "Reviews",
+        "nav_url_4": "",
+        "nav_link_5": "FAQ",
+        "nav_url_5": "",
+        "show_cta": true,
+        "cta_label": "Shop",
+        "cta_url": "",
+        "primary_color": "#1d7869",
+        "primary_glow_color": "#22c99e",
+        "ocean_deep_color": "#0c313d",
+        "ocean_mid_color": "#1e707a",
+        "background_color": "#f9f7f2",
+        "foreground_color": "#0c313d",
+        "muted_color": "#5a7a7f",
+        "border_color": "#d8e9eb"
+      }
+    }
+  },
+  "order": [
+    "header-mobile",
+    "custom_navbar_WKiHky",
+    "mossvida_header_t6a3yD"
+  ]
+}

@@ -1,0 +1,448 @@
+{% comment %}
+  MossVida — Custom Header Section
+  Fixed header with logo, navigation links, and CTA button
+{% endcomment %}
+
+<style>
+.mv-header-section *,
+.mv-header-section *::before,
+.mv-header-section *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mv-header-section {
+  --mv-primary: {{ section.settings.primary_color }};
+  --mv-primary-glow: {{ section.settings.primary_glow_color }};
+  --mv-ocean-deep: {{ section.settings.ocean_deep_color }};
+  --mv-ocean-mid: {{ section.settings.ocean_mid_color }};
+  --mv-background: {{ section.settings.background_color }};
+  --mv-foreground: {{ section.settings.foreground_color }};
+  --mv-muted-foreground: {{ section.settings.muted_color }};
+  --mv-border: {{ section.settings.border_color }};
+  --mv-card: #ffffff;
+  --mv-radius: 1rem;
+  --mv-shadow-soft: 0 4px 20px -4px rgba(0,0,0,0.08);
+  --mv-shadow-glow: 0 20px 60px -20px rgba(0,0,0,0.35);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.mv-header-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.5rem;
+}
+
+.mv-header-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  color: var(--mv-ocean-deep);
+}
+
+.mv-header-logo-img {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  object-fit: cover;
+  border: 2px solid rgba(0,0,0,0.05);
+}
+
+.mv-header-logo-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.mv-header-nav {
+  display: none;
+  align-items: center;
+  gap: 2rem;
+}
+
+@media (min-width: 768px) {
+  .mv-header-nav {
+    display: flex;
+  }
+}
+
+.mv-header-link {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mv-muted-foreground);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mv-header-link:hover {
+  color: var(--mv-primary);
+}
+
+.mv-header-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.5rem;
+  padding: 0 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--mv-primary), var(--mv-primary-glow));
+  border: none;
+  border-radius: 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--mv-shadow-soft);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.mv-header-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--mv-shadow-glow);
+  color: #ffffff;
+}
+
+.mv-header-cta svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.mv-header-mobile-menu-btn {
+  display: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--mv-ocean-deep);
+}
+
+@media (max-width: 767px) {
+  .mv-header-mobile-menu-btn {
+    display: flex;
+  }
+}
+
+.mv-header-mobile-menu-btn svg {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.mv-header-mobile {
+  display: none;
+  position: fixed;
+  top: 4.5rem;
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding: 1.5rem;
+  z-index: 998;
+}
+
+.mv-header-mobile.active {
+  display: block;
+}
+
+.mv-header-mobile-link {
+  display: block;
+  padding: 0.75rem 0;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--mv-ocean-deep);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.mv-header-mobile-link:last-child {
+  border-bottom: none;
+}
+
+.mv-header-mobile-cta {
+  margin-top: 1rem;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+@media (max-width: 767px) {
+  .mv-header-container {
+    padding: 0 1.5rem;
+  }
+}
+</style>
+
+<header class="mv-header-section" role="banner">
+  <div class="mv-header-container">
+    {%- if section.settings.logo != blank -%}
+      <a href="{{ routes.root_url }}" class="mv-header-logo">
+        {{ section.settings.logo | image_url: width: 200 | image_tag: class: 'mv-header-logo-img', alt: section.settings.logo_alt | default: shop.name }}
+        {%- if section.settings.show_logo_text -%}
+          <span class="mv-header-logo-text">{{ section.settings.logo_text | default: shop.name }}</span>
+        {%- endif -%}
+      </a>
+    {%- else -%}
+      <a href="{{ routes.root_url }}" class="mv-header-logo">
+        <span class="mv-header-logo-text">{{ section.settings.logo_text | default: shop.name }}</span>
+      </a>
+    {%- endif -%}
+
+    <nav class="mv-header-nav" role="navigation" aria-label="Main navigation">
+      {%- for i in (1..5) -%}
+        {%- assign link_key = 'nav_link_' | append: i -%}
+        {%- assign url_key = 'nav_url_' | append: i -%}
+        {%- assign link = section.settings[link_key] -%}
+        {%- assign url = section.settings[url_key] -%}
+        {%- if link != blank -%}
+          <a href="{{ url | default: '#' }}" class="mv-header-link">{{ link }}</a>
+        {%- endif -%}
+      {%- endfor -%}
+    </nav>
+
+    {%- if section.settings.show_cta -%}
+      <a href="{{ section.settings.cta_url | default: '#' }}" class="mv-header-cta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>
+        </svg>
+        {{ section.settings.cta_label }}
+      </a>
+    {%- endif -%}
+
+    <button class="mv-header-mobile-menu-btn" type="button" aria-label="Toggle menu" aria-expanded="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <div class="mv-header-mobile" id="mv-mobile-menu">
+    {%- for i in (1..5) -%}
+      {%- assign link_key = 'nav_link_' | append: i -%}
+      {%- assign url_key = 'nav_url_' | append: i -%}
+      {%- assign link = section.settings[link_key] -%}
+      {%- assign url = section.settings[url_key] -%}
+      {%- if link != blank -%}
+        <a href="{{ url | default: '#' }}" class="mv-header-mobile-link">{{ link }}</a>
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if section.settings.show_cta -%}
+      <div class="mv-header-mobile-cta">
+        <a href="{{ section.settings.cta_url | default: '#' }}" class="mv-header-cta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>
+          </svg>
+          {{ section.settings.cta_label }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const menuBtn = document.querySelector('.mv-header-mobile-menu-btn');
+  const mobileMenu = document.getElementById('mv-mobile-menu');
+  
+  if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', function() {
+      const isActive = mobileMenu.classList.contains('active');
+      mobileMenu.classList.toggle('active');
+      menuBtn.setAttribute('aria-expanded', !isActive);
+    });
+    
+    const links = mobileMenu.querySelectorAll('.mv-header-mobile-link');
+    links.forEach(link => {
+      link.addEventListener('click', function() {
+        mobileMenu.classList.remove('active');
+        menuBtn.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+});
+</script>
+
+{% schema %}
+{
+  "name": "MossVida — Header",
+  "tag": "section",
+  "class": "mv-header-section-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_alt",
+      "label": "Logo alt text",
+      "default": "MossVida"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_logo_text",
+      "label": "Show logo text",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Logo text",
+      "default": "MossVida"
+    },
+    {
+      "type": "header",
+      "content": "Navigation Links"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_1",
+      "label": "Link 1",
+      "default": "Benefits"
+    },
+    {
+      "type": "url",
+      "id": "nav_url_1",
+      "label": "Link 1 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_2",
+      "label": "Link 2",
+      "default": "Product"
+    },
+    {
+      "type": "url",
+      "id": "nav_url_2",
+      "label": "Link 2 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_3",
+      "label": "Link 3",
+      "default": "How it works"
+    },
+    {
+      "type": "url",
+      "id": "nav_url_3",
+      "label": "Link 3 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_4",
+      "label": "Link 4",
+      "default": "Reviews"
+    },
+    {
+      "type": "url",
+      "id": "nav_url_4",
+      "label": "Link 4 URL"
+    },
+    {
+      "type": "text",
+      "id": "nav_link_5",
+      "label": "Link 5",
+      "default": "FAQ"
+    },
+    {
+      "type": "url",
+      "id": "nav_url_5",
+      "label": "Link 5 URL"
+    },
+    {
+      "type": "header",
+      "content": "CTA Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cta",
+      "label": "Show CTA button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "Shop"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary teal",
+      "default": "#1d7869"
+    },
+    {
+      "type": "color",
+      "id": "primary_glow_color",
+      "label": "Primary glow aqua",
+      "default": "#22c99e"
+    },
+    {
+      "type": "color",
+      "id": "ocean_deep_color",
+      "label": "Ocean deep",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "ocean_mid_color",
+      "label": "Ocean mid",
+      "default": "#1e707a"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f9f7f2"
+    },
+    {
+      "type": "color",
+      "id": "foreground_color",
+      "label": "Foreground",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#5a7a7f"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#d8e9eb"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MossVida — Header"
+    }
+  ]
+}
+{% endschema %}

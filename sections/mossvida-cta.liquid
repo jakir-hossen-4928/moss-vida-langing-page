@@ -1,0 +1,230 @@
+{% comment %}
+  MossVida — CTA Section
+  Final call-to-action with gradient background
+{% endcomment %}
+
+<style>
+.mv-cta-section *,
+.mv-cta-section *::before,
+.mv-cta-section *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+.mv-cta-section {
+  --mv-primary: {{ section.settings.primary_color }};
+  --mv-primary-glow: {{ section.settings.primary_glow_color }};
+  --mv-ocean-deep: {{ section.settings.ocean_deep_color }};
+  --mv-ocean-mid: {{ section.settings.ocean_mid_color }};
+  --mv-background: {{ section.settings.background_color }};
+  --mv-foreground: {{ section.settings.foreground_color }};
+  --mv-muted-foreground: {{ section.settings.muted_color }};
+  --mv-border: {{ section.settings.border_color }};
+  --mv-card: #ffffff;
+  --mv-radius: 1rem;
+  --mv-shadow-soft: 0 4px 20px -4px rgba(0,0,0,0.08);
+  --mv-shadow-glow: 0 20px 60px -20px rgba(0,0,0,0.35);
+  padding: 6rem 0;
+  background: linear-gradient(135deg, var(--mv-primary), var(--mv-primary-glow));
+  font-family: system-ui, -apple-system, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.mv-cta-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+}
+
+.mv-cta-container {
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: 0 2rem;
+  text-align: center;
+  position: relative;
+  color: #ffffff;
+}
+
+.mv-cta-h2 {
+  font-size: clamp(2rem, 5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1.5rem;
+}
+
+.mv-cta-sub {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.85);
+  margin-bottom: 2rem;
+}
+
+.mv-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 2.5rem;
+  height: 3.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mv-primary);
+  background: #ffffff;
+  border: none;
+  border-radius: var(--mv-radius);
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--mv-shadow-glow);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.mv-cta-btn:hover {
+  transform: scale(1.05);
+  background: rgba(255,255,255,0.9);
+  color: var(--mv-primary);
+}
+
+.mv-cta-btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .mv-cta-section { padding: 4rem 0; }
+  .mv-cta-container { padding: 0 1.5rem; }
+  .mv-cta-btn { width: 100%; justify-content: center; }
+}
+</style>
+
+<section class="mv-cta-section" aria-label="{{ section.settings.aria_label | default: 'Call to Action' }}">
+  {%- if section.settings.background_image != blank -%}
+    <div class="mv-cta-bg" style="background-image: url('{{ section.settings.background_image | image_url: width: 2000 }}');"></div>
+  {%- endif -%}
+  <div class="mv-cta-container">
+    <h2 class="mv-cta-h2">{{ section.settings.heading }}</h2>
+    {%- if section.settings.subtext != blank -%}
+      <p class="mv-cta-sub">{{ section.settings.subtext }}</p>
+    {%- endif -%}
+    {%- if section.settings.cta_label != blank -%}
+      <a href="{{ section.settings.cta_url | default: '#' }}" class="mv-cta-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="21" r="1"/><circle cx="18" cy="21" r="1"/>
+        </svg>
+        {{ section.settings.cta_label }}
+      </a>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "MossVida — CTA",
+  "tag": "section",
+  "class": "mv-cta-section-wrap",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Start your wellness ritual today."
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "One bottle. 60 gummies. 30 days to your best self."
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA button label",
+      "default": "Order now — $125"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image (optional, semi-transparent overlay)"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary teal",
+      "default": "#1d7869"
+    },
+    {
+      "type": "color",
+      "id": "primary_glow_color",
+      "label": "Primary glow aqua",
+      "default": "#22c99e"
+    },
+    {
+      "type": "color",
+      "id": "ocean_deep_color",
+      "label": "Ocean deep",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "ocean_mid_color",
+      "label": "Ocean mid",
+      "default": "#1e707a"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f9f7f2"
+    },
+    {
+      "type": "color",
+      "id": "foreground_color",
+      "label": "Foreground",
+      "default": "#0c313d"
+    },
+    {
+      "type": "color",
+      "id": "muted_color",
+      "label": "Muted text",
+      "default": "#5a7a7f"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#d8e9eb"
+    },
+    {
+      "type": "header",
+      "content": "Accessibility"
+    },
+    {
+      "type": "text",
+      "id": "aria_label",
+      "label": "ARIA label",
+      "default": "Call to Action"
+    }
+  ],
+  "presets": [
+    {
+      "name": "MossVida — CTA"
+    }
+  ]
+}
+{% endschema %}
