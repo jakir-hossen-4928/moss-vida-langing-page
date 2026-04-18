@@ -7,8 +7,7 @@ MossVida is a high-performance, conversion-optimized Shopify theme designed spec
 
 ## 🖼️ Project Preview
 
-![MossVida Desktop Preview](https://i.ibb.co.com/Z1bn2GFh/screencapture-mossvida-2-myshopify-2026-04-18-18-36-35.png)
-
+![MossVida](https://i.ibb.co.com/Z1bn2GFh/screencapture-mossvida-2-myshopify-2026-04-18-18-36-35.png)
 ---
 
 ## ✨ Key Features
