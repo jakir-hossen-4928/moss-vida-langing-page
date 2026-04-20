@@ -7479,3 +7479,19 @@ summary::-webkit-details-marker {
   color: #ffffff !important;
   border: 1px solid #179E89 !important;
 }
+
+
+/** force remove browser default arrows on product page **/
+
+input[type="number"].ai-product-qty-input-andlyk3nzb0jpnwnoeaigenblock1992ab5a7neqh {
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+  appearance: textfield !important;
+}
+
+/* Chrome, Safari, Edge */
+input[type="number"].ai-product-qty-input-andlyk3nzb0jpnwnoeaigenblock1992ab5a7neqh::-webkit-outer-spin-button,
+input[type="number"].ai-product-qty-input-andlyk3nzb0jpnwnoeaigenblock1992ab5a7neqh::-webkit-inner-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0 !important;
+}

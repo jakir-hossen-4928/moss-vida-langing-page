@@ -124,7 +124,7 @@
     "trust_image_product_4": "shopify://shop_images/security-image-4.png",
     "trust_image_cart_1": "shopify://shop_images/image-trust.jpg",
     "show_dynamic_browser_title": false,
-    "dynamic_browser_title_content": "Come back ⚡",
+    "dynamic_browser_title_content": "",
     "pagination_style": "1",
     "show_effect_close": true,
     "product_block_image_ratio": "adapt",
@@ -847,6 +847,37 @@
           "footer_top_title_color": "#ffffff",
           "footer_top_color_link": "#ffffff",
           "footer_top_color_link_hover": "#ffffff"
+        }
+      },
+      "password-page-1": {
+        "type": "password-page-1",
+        "settings": {
+          "background_color": "",
+          "brand_type": "image",
+          "brand_text": "",
+          "brand_logo_font_size": 30,
+          "logo_color": "#232323",
+          "brand_logo": "shopify://shop_images/Adobe_Express_-_file.png",
+          "brand_logo_width": 120,
+          "banner": "shopify://shop_images/coming-soon-background-with-focus-light-effect-design_1017-27277.avif",
+          "banner_color": "#ffffff",
+          "show_newsletter": true,
+          "title": "Our store will be opening soon",
+          "title_font_size": 24,
+          "title_font_size_mb": 24,
+          "title_color": "#ffffff",
+          "subtitle": "Phasellus lorem de pulvinar maecenas.",
+          "subtitle_font_size": 12,
+          "subtitle_color": "#ffffff",
+          "input_color": "#323232",
+          "terms_text_color": "#848484",
+          "terms_link_color": "#3c3c3c",
+          "btn": "1",
+          "show_social_media": true,
+          "social_media_color": "#ffffff",
+          "show_copyright": true,
+          "copyright_content": "",
+          "copyright_color": "#7e7e7e"
         }
       }
     },

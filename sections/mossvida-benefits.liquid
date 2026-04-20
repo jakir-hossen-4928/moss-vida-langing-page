@@ -147,7 +147,7 @@
   width:         var(--mv-icon-size);
   height:        var(--mv-icon-size);
   border-radius: var(--mv-icon-radius);
-  background:    linear-gradient(var(--mv-icon-deg), var(--mv-primary), var(--mv-primary-glow));
+  background:    var(--mv-icon-bg, linear-gradient(var(--mv-icon-deg), var(--mv-primary), var(--mv-primary-glow)));
   display:       flex;
   align-items:   center;
   justify-content: center;
@@ -188,6 +188,21 @@
     --mv-section-pb: {{ section.settings.section_padding_bottom_mobile }}px;
   }
   .mv-benefits-container { padding: 0 {{ section.settings.container_padding_x_mobile }}px; }
+
+  /* Mobile Content Toggling */
+  .mv-desktop-only { display: block; }
+  .mv-mobile-only { display: none; }
+  
+  @media (max-width: 768px) {
+    .mv-desktop-only { display: none !important; }
+    .mv-mobile-only { display: block !important; }
+  }
+}
+
+.mv-benefit-icon img {
+  width: var(--mv-icon-svg);
+  height: var(--mv-icon-svg);
+  object-fit: contain;
 }
 </style>
 
@@ -204,7 +219,7 @@
           <span class="mv-benefits-kicker">{{ section.settings.kicker }}</span>
         {%- endif -%}
         {%- if section.settings.heading != blank -%}
-          <{{ section.settings.heading_tag }} class="mv-benefits-h2">{{ section.settings.heading }}</{{ section.settings.heading_tag }}>
+          <{{ section.settings.heading_tag }} class="mv-benefits-h2">{{ section.settings.heading | newline_to_br }}</{{ section.settings.heading_tag }}>
         {%- endif -%}
       </div>
     {%- endif -%}
@@ -214,12 +229,16 @@
         {%- assign title_key   = 'benefit_title_'        | append: i -%}
         {%- assign desc_key    = 'benefit_desc_'         | append: i -%}
         {%- assign icon_key    = 'benefit_icon_'         | append: i -%}
+        {%- assign img_icon_key = 'benefit_image_icon_'  | append: i -%}
         {%- assign bg_key      = 'benefit_card_bg_'      | append: i -%}
         {%- assign icon_c1_key = 'benefit_icon_color1_'  | append: i -%}
         {%- assign icon_c2_key = 'benefit_icon_color2_'  | append: i -%}
         {%- assign title       = section.settings[title_key]   -%}
         {%- assign desc        = section.settings[desc_key]    -%}
         {%- assign icon_choice = section.settings[icon_key]    -%}
+        {%- assign img_icon    = section.settings[img_icon_key] -%}
+        {%- assign icon_bg_key  = 'benefit_icon_bg_color_' | append: i -%}
+        {%- assign icon_bg      = section.settings[icon_bg_key] -%}
         {%- assign card_bg     = section.settings[bg_key]      -%}
         {%- assign icon_c1     = section.settings[icon_c1_key] -%}
         {%- assign icon_c2     = section.settings[icon_c2_key] -%}
@@ -227,62 +246,66 @@
         {%- if title != blank or desc != blank -%}
           <div
             class="mv-benefit-card"
-            style="{%- if card_bg != blank -%}background:{{ card_bg }};{%- endif -%}{%- if icon_c1 != blank and icon_c2 != blank -%}--mv-primary:{{ icon_c1 }};--mv-primary-glow:{{ icon_c2 }};{%- endif -%}"
+            style="{%- if card_bg != blank -%}background:{{ card_bg }};{%- endif -%}{% if icon_bg != blank %}--mv-icon-bg:{{ icon_bg }};{% elsif icon_c1 != blank and icon_c2 != blank %}--mv-primary:{{ icon_c1 }};--mv-primary-glow:{{ icon_c2 }};{% endif %}"
           >
             <div class="mv-benefit-icon" aria-hidden="true">
-              {%- case icon_choice -%}
-              {%- when 'zap' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                </svg>
-              {%- when 'shield' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-              {%- when 'heart' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-                </svg>
-              {%- when 'leaf' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
-                  <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
-                </svg>
-              {%- when 'star' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                </svg>
-              {%- when 'sun' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4"/>
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
-                </svg>
-              {%- when 'droplet' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
-                </svg>
-              {%- when 'award' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="8" r="6"/>
-                  <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-                </svg>
-              {%- when 'check-circle' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                  <polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-              {%- when 'package' -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M16.5 9.4 7.55 4.24"/>
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                  <polyline points="3.29 7 12 12 20.71 7"/>
-                  <line x1="12" x2="12" y1="22" y2="12"/>
-                </svg>
+              {%- if img_icon != blank -%}
+                {{ img_icon | image_url: width: 100 | image_tag: loading: 'lazy' }}
               {%- else -%}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
-                </svg>
-              {%- endcase -%}
+                {%- case icon_choice -%}
+                {%- when 'zap' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                {%- when 'shield' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                {%- when 'heart' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                  </svg>
+                {%- when 'leaf' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                  </svg>
+                {%- when 'star' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                {%- when 'sun' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
+                  </svg>
+                {%- when 'droplet' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z"/>
+                  </svg>
+                {%- when 'award' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="12" cy="8" r="6"/>
+                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                  </svg>
+                {%- when 'check-circle' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                {%- when 'package' -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M16.5 9.4 7.55 4.24"/>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.29 7 12 12 20.71 7"/>
+                    <line x1="12" x2="12" y1="22" y2="12"/>
+                  </svg>
+                {%- else -%}
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                {%- endcase -%}
+              {%- endif -%}
             </div>
             {%- if title != blank -%}<h3 class="mv-benefit-h3">{{ title }}</h3>{%- endif -%}
             {%- if desc != blank -%}<p class="mv-benefit-desc">{{ desc }}</p>{%- endif -%}
@@ -450,7 +473,9 @@
         {"value":"check-circle","label":"✅ Check Circle"},{"value":"package","label":"📦 Package"}
       ]
     },
+    { "type": "image_picker", "id": "benefit_image_icon_1", "label": "Custom image icon", "info": "Optional. If uploaded, replaces the SVG icon selected above." },
     { "type": "color", "id": "benefit_card_bg_1",     "label": "Card bg override",          "info": "Blank = use global card color." },
+    { "type": "color", "id": "benefit_icon_bg_color_1", "label": "Icon background color override", "info": "If set, replaces the gradient with a solid color." },
     { "type": "color", "id": "benefit_icon_color1_1", "label": "Icon gradient start override","info": "Blank = use global primary." },
     { "type": "color", "id": "benefit_icon_color2_1", "label": "Icon gradient end override",  "info": "Blank = use global glow." },
 
@@ -466,7 +491,9 @@
         {"value":"check-circle","label":"✅ Check Circle"},{"value":"package","label":"📦 Package"}
       ]
     },
+    { "type": "image_picker", "id": "benefit_image_icon_2", "label": "Custom image icon" },
     { "type": "color", "id": "benefit_card_bg_2",     "label": "Card bg override" },
+    { "type": "color", "id": "benefit_icon_bg_color_2", "label": "Icon background color override" },
     { "type": "color", "id": "benefit_icon_color1_2", "label": "Icon gradient start override" },
     { "type": "color", "id": "benefit_icon_color2_2", "label": "Icon gradient end override" },
 
@@ -482,7 +509,9 @@
         {"value":"check-circle","label":"✅ Check Circle"},{"value":"package","label":"📦 Package"}
       ]
     },
+    { "type": "image_picker", "id": "benefit_image_icon_3", "label": "Custom image icon" },
     { "type": "color", "id": "benefit_card_bg_3",     "label": "Card bg override" },
+    { "type": "color", "id": "benefit_icon_bg_color_3", "label": "Icon background color override" },
     { "type": "color", "id": "benefit_icon_color1_3", "label": "Icon gradient start override" },
     { "type": "color", "id": "benefit_icon_color2_3", "label": "Icon gradient end override" },
 
@@ -498,7 +527,9 @@
         {"value":"check-circle","label":"✅ Check Circle"},{"value":"package","label":"📦 Package"}
       ]
     },
+    { "type": "image_picker", "id": "benefit_image_icon_4", "label": "Custom image icon" },
     { "type": "color", "id": "benefit_card_bg_4",     "label": "Card bg override" },
+    { "type": "color", "id": "benefit_icon_bg_color_4", "label": "Icon background color override" },
     { "type": "color", "id": "benefit_icon_color1_4", "label": "Icon gradient start override" },
     { "type": "color", "id": "benefit_icon_color2_4", "label": "Icon gradient end override" }
 
