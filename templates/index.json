@@ -67,7 +67,9 @@
     "mossvida_benefits_xaH9VB": {
       "type": "mossvida-benefits",
       "custom_css": [
-        ".mv-benefits-container {max-width: 1400px !important; margin: 0 auto; padding: 0 var(--mv-container-px);}"
+        ".mv-benefits-container {max-width: 1400px !important; margin: 0 auto; padding: 0 var(--mv-container-px);}",
+        ".mv-benefit-icon {width: 60px; /* increase size */ height: 60px;}",
+        ".mv-benefit-icon svg,.mv-benefit-icon img {width: 100%; height: 100%;}"
       ],
       "name": "MossVida — Benefits",
       "settings": {
@@ -92,7 +94,7 @@
         "kicker_letter_spacing": 20,
         "kicker_margin_bottom": 16,
         "kicker_color": "#1d7869",
-        "heading_font_size_min": 30,
+        "heading_font_size_min": 26,
         "heading_font_size_max": 48,
         "heading_font_weight": "700",
         "heading_line_height": 11,
@@ -128,14 +130,15 @@
         "benefit_desc_font_size": 16,
         "benefit_desc_line_height": 16,
         "benefit_desc_color": "#5a7a7f",
-        "primary_color": "#1d7869",
-        "primary_glow_color": "#22c99e",
+        "primary_color": "rgba(0,0,0,0)",
+        "primary_glow_color": "rgba(0,0,0,0)",
         "background_color": "#f9f7f2",
         "card_color": "#ffffff",
         "border_color": "#d8e9eb",
         "benefit_title_1": "Boosts Energy",
         "benefit_desc_1": "Natural sustained vitality from ocean-sourced minerals.",
         "benefit_icon_1": "zap",
+        "benefit_image_icon_1": "shopify://shop_images/bolt_1_7d648f0a-6bd1-4cde-b693-7f428cfa1561.png",
         "benefit_card_bg_1": "",
         "benefit_icon_bg_color_1": "",
         "benefit_icon_color1_1": "",
@@ -143,6 +146,7 @@
         "benefit_title_2": "Immune Support",
         "benefit_desc_2": "92 of 102 essential minerals your body needs daily.",
         "benefit_icon_2": "shield",
+        "benefit_image_icon_2": "shopify://shop_images/immunity.png",
         "benefit_card_bg_2": "",
         "benefit_icon_bg_color_2": "",
         "benefit_icon_color1_2": "",
@@ -150,6 +154,7 @@
         "benefit_title_3": "Better Digestion",
         "benefit_desc_3": "Prebiotic fiber that nurtures a balanced gut.",
         "benefit_icon_3": "heart",
+        "benefit_image_icon_3": "shopify://shop_images/stomach_1.png",
         "benefit_card_bg_3": "",
         "benefit_icon_bg_color_3": "",
         "benefit_icon_color1_3": "",
@@ -157,6 +162,7 @@
         "benefit_title_4": "Clean Ingredients",
         "benefit_desc_4": "Vegan, organic, non-GMO. Zero artificial junk.",
         "benefit_icon_4": "leaf",
+        "benefit_image_icon_4": "shopify://shop_images/natural-ingredients.png",
         "benefit_card_bg_4": "",
         "benefit_icon_bg_color_4": "",
         "benefit_icon_color1_4": "",
@@ -318,7 +324,7 @@
     "mossvida_how_it_works_mF3XDe": {
       "type": "mossvida-how-it-works",
       "custom_css": [
-        "@media (max-width: 768px) {section.mv-how-section-template--21940840464600__mossvida_how_it_works_mF3XDe h2.mv-how-h2 {font-size: 32px !important; } .mv-how-number {top: -29px; left: 27px; font-size: 53px; }}"
+        "@media (max-width: 768px) {section.mv-how-section-template--21940840464600__mossvida_how_it_works_mF3XDe h2.mv-how-h2 {font-size: 30px !important; } .mv-how-number {top: -29px; left: 27px; font-size: 53px; }}"
       ],
       "name": "MossVida — How It Works",
       "settings": {
