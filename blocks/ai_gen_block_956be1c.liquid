@@ -118,11 +118,10 @@
   .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-icon-{{ ai_gen_id }} {
     transform: rotate({{ block.settings.icon_rotation_active }}deg);
   }
-
   .ai-faq-answer-{{ ai_gen_id }} {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease, padding 0.3s ease;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: {{ block.settings.answer_font_size }}px;
     font-weight: {{ block.settings.answer_font_weight }};
     color: {{ block.settings.answer_color }};
@@ -131,11 +130,17 @@
   }
 
   .ai-faq-answer-content-{{ ai_gen_id }} {
-    padding-bottom: {{ block.settings.answer_padding_bottom }}px;
+    overflow: hidden;
+    padding-bottom: 0;
+    transition: padding-bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-{{ ai_gen_id }} {
-    max-height: 1000px;
+    grid-template-rows: 1fr;
+  }
+
+  .ai-faq-item-{{ ai_gen_id }}.active .ai-faq-answer-content-{{ ai_gen_id }} {
+    padding-bottom: {{ block.settings.answer_padding_bottom }}px;
   }
 
   @media screen and (max-width: 749px) {
